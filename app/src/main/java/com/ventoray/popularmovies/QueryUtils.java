@@ -8,20 +8,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 import static com.ventoray.popularmovies.DBConstants.ADULT;
 import static com.ventoray.popularmovies.DBConstants.API_KEY;
@@ -44,6 +39,7 @@ import static com.ventoray.popularmovies.DBConstants.POSTER_PATH;
 import static com.ventoray.popularmovies.DBConstants.RATING_ASC;
 import static com.ventoray.popularmovies.DBConstants.RATING_DESC;
 import static com.ventoray.popularmovies.DBConstants.RELEASE_DATE;
+import static com.ventoray.popularmovies.DBConstants.RESULTS;
 import static com.ventoray.popularmovies.DBConstants.TITLE;
 import static com.ventoray.popularmovies.DBConstants.VIDEO;
 import static com.ventoray.popularmovies.DBConstants.VOTE_AVERAGE;
@@ -52,8 +48,6 @@ import static com.ventoray.popularmovies.DBConstants.VOTE_COUNT;
 /**
  * Created by Nick on 10/15/2017.
  */
-
-
 
 public class QueryUtils {
 
@@ -90,9 +84,8 @@ public class QueryUtils {
         } catch (MalformedURLException e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
+            return null;
         }
-
-        // TODO: 10/15/2017 check for null when method called to notify user there was an error
         return url;
     }
 
@@ -162,8 +155,8 @@ public class QueryUtils {
 
 
     private static Movie[] parseJson(String jsonToParse) {
-        JSONObject jsonResponse = null;
-        Movie[] movies = null;
+        JSONObject jsonResponse;
+        Movie[] movies;
 
         if (jsonToParse == null || jsonToParse.isEmpty()) {
             return null;
@@ -171,7 +164,7 @@ public class QueryUtils {
 
         try {
             jsonResponse = new JSONObject(jsonToParse);
-            JSONArray resultsArray = jsonResponse.getJSONArray("results");
+            JSONArray resultsArray = jsonResponse.getJSONArray(RESULTS);
             movies = new Movie[resultsArray.length()];
             int id = 0;
             int voteCount = 0;
@@ -222,10 +215,11 @@ public class QueryUtils {
                 Log.i(TAG, movies[i].getTitle());
             }
 
+            return movies;
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         return null;
     }

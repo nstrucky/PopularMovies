@@ -21,9 +21,23 @@ public class DBConstants {
     public static final String POPULAR_DESC = "popularity.desc";
     public static final String RATING_DESC = "vote_average.desc";
 
+    /**
+     *  Image URL constants
+     */
+    public static final String BASE_URL_IMAGE = "http://image.tmdb.org/t/p/";
+    public static final String W92 = "w92";
+    public static final String W154 = "w154";
+    public static final String W185 = "w185";
+    public static final String W342 = "w342";
+    public static final String W500 = "w500";
+    public static final String W780 = "w780";
+    public static final String ORIGINAL = "original";
+
     public static final int HTTP_RESPONSE_OK = 200;
 
 
+
+    public static final String RESULTS = "results";
     public static final String VOTE_COUNT = "vote_count";
     public static final String ID = "id";
     public static final String VIDEO = "video";

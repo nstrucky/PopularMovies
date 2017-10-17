@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
+    <string name="error_url_creation">There was an error constructing the Movies URL.</string>
 </resources>
