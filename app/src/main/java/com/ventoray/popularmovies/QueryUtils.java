@@ -4,6 +4,10 @@ import android.net.Uri;
 import android.support.annotation.StringDef;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +19,35 @@ import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static com.ventoray.popularmovies.DBConstants.ADULT;
+import static com.ventoray.popularmovies.DBConstants.API_KEY;
+import static com.ventoray.popularmovies.DBConstants.BACKDROP_PATH;
+import static com.ventoray.popularmovies.DBConstants.BASE_URL;
+import static com.ventoray.popularmovies.DBConstants.EN_US;
+import static com.ventoray.popularmovies.DBConstants.HTTP_RESPONSE_OK;
+import static com.ventoray.popularmovies.DBConstants.ID;
+import static com.ventoray.popularmovies.DBConstants.ORIGINAL_LANGUAGE;
+import static com.ventoray.popularmovies.DBConstants.ORIGINAL_TITLE;
+import static com.ventoray.popularmovies.DBConstants.OVERVIEW;
+import static com.ventoray.popularmovies.DBConstants.PARAM_API_KEY;
+import static com.ventoray.popularmovies.DBConstants.PARAM_LANGUAGE;
+import static com.ventoray.popularmovies.DBConstants.PARAM_PAGE;
+import static com.ventoray.popularmovies.DBConstants.PARAM_SORT_BY;
+import static com.ventoray.popularmovies.DBConstants.POPULARITY;
+import static com.ventoray.popularmovies.DBConstants.POPULAR_ASC;
+import static com.ventoray.popularmovies.DBConstants.POPULAR_DESC;
+import static com.ventoray.popularmovies.DBConstants.POSTER_PATH;
+import static com.ventoray.popularmovies.DBConstants.RATING_ASC;
+import static com.ventoray.popularmovies.DBConstants.RATING_DESC;
+import static com.ventoray.popularmovies.DBConstants.RELEASE_DATE;
+import static com.ventoray.popularmovies.DBConstants.TITLE;
+import static com.ventoray.popularmovies.DBConstants.VIDEO;
+import static com.ventoray.popularmovies.DBConstants.VOTE_AVERAGE;
+import static com.ventoray.popularmovies.DBConstants.VOTE_COUNT;
 
 /**
  * Created by Nick on 10/15/2017.
@@ -35,37 +66,25 @@ public class QueryUtils {
     })
     public @interface SortMethod {}
 
-    public static final String POPULAR_ASC = "popularity.asc";
-    public static final String RATING_ASC = "vote_average.asc";
-    public static final String POPULAR_DESC = "popularity.desc";
-    public static final String RATING_DESC = "vote_average.desc";
-
 
     private static final String TAG = "QueryUtils";
 
-    // TODO: 10/15/2017 Delete before push!!! 
-    private static final String API_KEY = "";
-    private static final String EN_US = "en-US";
-
-    private static final String PARAM_API_KEY = "api_key";
-    private static final String PARAM_SORT_BY = "sort_by";
-    private static final String PARAM_LANGUAGE = "language";
-
-    private static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
-
-    private static final int HTTP_RESPONSE_OK = 200;
-
-
-    public static URL buildUrl(@SortMethod String sortBy) {
+    public static URL buildUrl(@SortMethod String sortBy, int pageNumber) {
         URL url = null;
-        Uri uri = Uri.parse(BASE_URL)
+        Uri uri;
+
+        Uri.Builder builder = Uri.parse(BASE_URL)
                 .buildUpon()
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
                 .appendQueryParameter(PARAM_SORT_BY, sortBy)
-                .appendQueryParameter(PARAM_LANGUAGE, EN_US)
+                .appendQueryParameter(PARAM_LANGUAGE, EN_US);
 
-                .build();
+        if (pageNumber > 0 && pageNumber <= 1000) {
+            String pageNumberString = Integer.toString(pageNumber);
+            builder.appendQueryParameter(PARAM_PAGE, pageNumberString);
+        }
 
+        uri = builder.build();
         try {
             url = new URL(uri.toString());
         } catch (MalformedURLException e) {
@@ -83,7 +102,7 @@ public class QueryUtils {
      * @return - returns List of Movies to pass to adapter class
      * @throws IOException
      */
-    public static List<Movie> makeHttpUrlRequest(URL url) {
+    public static Movie[] makeHttpUrlRequest(URL url) {
         InputStream in = null;
         String jsonToParse = null;
         HttpURLConnection urlConnection = null;
@@ -92,6 +111,7 @@ public class QueryUtils {
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
+            Log.i(TAG, "response code " + urlConnection.getResponseCode());
             if (urlConnection.getResponseCode() == HTTP_RESPONSE_OK) {
                 in = urlConnection.getInputStream();
                 jsonToParse = getResponseFromHTTPUrl(in);
@@ -141,12 +161,71 @@ public class QueryUtils {
     }
 
 
-    private static List<Movie> parseJson(String jsonToParse) {
-        // TODO: 10/15/2017 parse json from httpresponse string
+    private static Movie[] parseJson(String jsonToParse) {
+        JSONObject jsonResponse = null;
+        Movie[] movies = null;
 
-        if (jsonToParse == null) {
+        if (jsonToParse == null || jsonToParse.isEmpty()) {
             return null;
         }
+
+        try {
+            jsonResponse = new JSONObject(jsonToParse);
+            JSONArray resultsArray = jsonResponse.getJSONArray("results");
+            movies = new Movie[resultsArray.length()];
+            int id = 0;
+            int voteCount = 0;
+            int voteAverage = 0;
+            String title = null;
+            String overview = null;
+            String releaseDate = null;
+            String posterPath = null;
+            String originalLanguage = null;
+            String originalTitle = null;
+            String backdropPath = null;
+            boolean adult = false;
+            boolean video = false;
+            double popularity = 0.0;
+
+            for (int i = 0; i < movies.length; i++) {
+                Movie movie = new Movie();
+                JSONObject jsonObject = resultsArray.getJSONObject(i);
+                id = jsonObject.getInt(ID);
+                voteCount = jsonObject.getInt(VOTE_COUNT);
+                voteAverage = jsonObject.getInt(VOTE_AVERAGE);
+                title = jsonObject.getString(TITLE);
+                overview = jsonObject.getString(OVERVIEW);
+                releaseDate = jsonObject.getString(RELEASE_DATE);
+                posterPath = jsonObject.getString(POSTER_PATH);
+                originalLanguage = jsonObject.getString(ORIGINAL_LANGUAGE);
+                originalTitle = jsonObject.getString(ORIGINAL_TITLE);
+                backdropPath = jsonObject.getString(BACKDROP_PATH);
+                adult = jsonObject.getBoolean(ADULT);
+                video = jsonObject.getBoolean(VIDEO);
+                popularity = jsonObject.getDouble(POPULARITY);
+
+                movie.setId(id);
+                movie.setVoteCount(voteCount);
+                movie.setVoteAverage(voteAverage);
+                movie.setTitle(title);
+                movie.setOverview(overview);
+                movie.setReleaseDate(releaseDate);
+                movie.setPosterPath(posterPath);
+                movie.setOriginalLanguage(originalLanguage);
+                movie.setOriginalTitle(originalTitle);
+                movie.setBackdropPath(backdropPath);
+                movie.setAdult(adult);
+                movie.setVideo(video);
+                movie.setPopularity(popularity);
+
+                movies[i] = movie;
+                Log.i(TAG, movies[i].getTitle());
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         return null;
     }
