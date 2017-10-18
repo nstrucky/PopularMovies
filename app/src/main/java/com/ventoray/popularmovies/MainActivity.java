@@ -1,5 +1,6 @@
 package com.ventoray.popularmovies;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> mMovies;
     private RecyclerView mRecyclerView;
     private MoviePosterAdapter mAdapter;
+    private MoviePosterAdapter.PosterOnClickListener posterListener;
+
+    public static final String SERIALIZABLE_MOVIE_KEY = "serializableMovieKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +48,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         GridLayoutManager glm = new GridLayoutManager(this, 3);
-//        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         mMovies = new ArrayList<>();
-        mAdapter = new MoviePosterAdapter(mMovies, getApplicationContext());
+        mAdapter = new MoviePosterAdapter(mMovies,
+                getApplicationContext(), new MoviePosterAdapter.PosterOnClickListener() {
+            @Override
+            public void onClick(Movie movie) {
+                Intent intent = new Intent(getApplicationContext(), MovieDetailsActivity.class);
+                intent.putExtra(SERIALIZABLE_MOVIE_KEY, movie);
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_posters);
         mRecyclerView.setLayoutManager(glm);
         mRecyclerView.setAdapter(mAdapter);

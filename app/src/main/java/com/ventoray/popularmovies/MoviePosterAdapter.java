@@ -25,12 +25,18 @@ import static com.ventoray.popularmovies.DBConstants.W500;
 
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.MovieViewHolder> {
 
+    interface PosterOnClickListener {
+        void onClick(Movie movie);
+    }
+
     private List<Movie> movies;
     private Context context;
+    private PosterOnClickListener listener;
 
-    public MoviePosterAdapter(List<Movie> movies, Context context) {
+    public MoviePosterAdapter(List<Movie> movies, Context context, PosterOnClickListener listener) {
         this.movies = movies;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -42,7 +48,6 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-
         Movie movie = movies.get(position);
         String posterPath = movie.getPosterPath();
 
@@ -58,7 +63,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         return movies.size();
     }
 
-    class MovieViewHolder extends RecyclerView.ViewHolder {
+    class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView moviePosterImageView;
 
@@ -66,6 +71,14 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
             super(itemView);
 
             moviePosterImageView = itemView.findViewById(R.id.iv_movie_poster);
+            itemView.setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View view) {
+            int adapterPosition = getAdapterPosition();
+            listener.onClick(movies.get(adapterPosition));
         }
     }
 

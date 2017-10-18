@@ -1,10 +1,12 @@
 package com.ventoray.popularmovies;
 
+import java.io.Serializable;
+
 /**
  * Created by Nick on 10/15/2017.
  */
 
-public class Movie {
+public class Movie implements Serializable {
 
     private int id;
     private int voteCount;
