@@ -4,13 +4,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ventoray.popularmovies.MovieDetailsActivity">
+    tools:context="com.ventoray.popularmovies.MovieDetailsActivity"
+    android:background="@android:color/black">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    android:padding="5dp"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:id="@+id/tv_movie_title"
+                    />
+
+
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/iv_movie_poster"
+                    android:layout_below="@+id/tv_movie_title"/>
+
+
+
+
+            </RelativeLayout>
+
+
+
+    </ScrollView>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient"
+        />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:progressTint="@color/yellow"
+        style="@style/Base.Widget.AppCompat.RatingBar"/>
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:id="@+id/tv_movie_title"/>
+        android:textColor="@android:color/white"
+        android:layout_above="@id/ratingBar"
+        android:textSize="12sp"
+        android:padding="5dp"
+        android:fontFamily="sans-serif"
+        android:id="@+id/tv_synopsis"
+        />
+
+
 
 </RelativeLayout>
