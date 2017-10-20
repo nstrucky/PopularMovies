@@ -21,7 +21,7 @@ import java.net.URL;
 import static com.ventoray.popularmovies.DBConstants.ADULT;
 import static com.ventoray.popularmovies.DBConstants.API_KEY;
 import static com.ventoray.popularmovies.DBConstants.BACKDROP_PATH;
-import static com.ventoray.popularmovies.DBConstants.BASE_URL;
+import static com.ventoray.popularmovies.DBConstants.BASE_MOVIE_URL;
 import static com.ventoray.popularmovies.DBConstants.EN_US;
 import static com.ventoray.popularmovies.DBConstants.HTTP_RESPONSE_OK;
 import static com.ventoray.popularmovies.DBConstants.ID;
@@ -67,7 +67,7 @@ public class QueryUtils {
         URL url = null;
         Uri uri;
 
-        Uri.Builder builder = Uri.parse(BASE_URL)
+        Uri.Builder builder = Uri.parse(BASE_MOVIE_URL)
                 .buildUpon()
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
                 .appendQueryParameter(PARAM_SORT_BY, sortBy)

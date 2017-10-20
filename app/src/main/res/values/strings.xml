@@ -2,4 +2,8 @@
     <string name="app_name">Popular Movies</string>
 
     <string name="error_url_creation">There was an error constructing the Movies URL.</string>
+
+    <string name="popular">By Popularity</string>
+    <string name="rating">By Rating</string>
+
 </resources>

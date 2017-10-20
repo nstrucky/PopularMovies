@@ -15,7 +15,7 @@ public class DBConstants {
     public static final String PARAM_LANGUAGE = "language";
     public static final String PARAM_PAGE = "page";
 
-    public static final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
+    public static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/discover/movie";
     public static final String POPULAR_ASC = "popularity.asc";
     public static final String RATING_ASC = "vote_average.asc";
     public static final String POPULAR_DESC = "popularity.desc";

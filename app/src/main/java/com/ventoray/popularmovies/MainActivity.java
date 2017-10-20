@@ -1,14 +1,21 @@
 package com.ventoray.popularmovies;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.os.HardwarePropertiesManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.net.URL;
@@ -16,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.ventoray.popularmovies.DBConstants.POPULAR_ASC;
+import static com.ventoray.popularmovies.DBConstants.POPULAR_DESC;
 import static com.ventoray.popularmovies.DBConstants.RATING_ASC;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,17 +41,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setUpRecyclerView();
+        getMovieData(POPULAR_DESC, 1);
 
-        URL url = QueryUtils.buildUrl(RATING_ASC, 1);
+    }
 
+
+    private void getMovieData(String type, int page) {
+        URL url = QueryUtils.buildUrl(type, page);
         if (url != null) {
             new MovieLoaderAsyncTask().execute(url);
         } else {
             Toast.makeText(this, R.string.error_url_creation, Toast.LENGTH_SHORT).show();
         }
-
     }
 
 
@@ -88,7 +99,37 @@ public class MainActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         }
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_switch:
+                mMovies.clear();
+                String title = item.getTitle().toString();
+                String popular = getString(R.string.popular);
+                String rating = getString(R.string.rating);
+
+                if (title.equals(popular)) {
+                    getMovieData(DBConstants.POPULAR_DESC, 1);
+                    item.setTitle(rating);
+                } else {
+                    getMovieData(DBConstants.RATING_DESC, 1);
+                    item.setTitle(popular);
+                }
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

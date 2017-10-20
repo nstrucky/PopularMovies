@@ -6,19 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_IMAGE;
-import static com.ventoray.popularmovies.DBConstants.ORIGINAL;
 import static com.ventoray.popularmovies.DBConstants.W185;
-import static com.ventoray.popularmovies.DBConstants.W342;
-import static com.ventoray.popularmovies.DBConstants.W500;
-
 /**
  * Created by Nick on 10/16/2017.
  */
@@ -32,15 +26,18 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     private List<Movie> movies;
     private Context context;
     private PosterOnClickListener listener;
+    private int screenWidth;
 
     public MoviePosterAdapter(List<Movie> movies, Context context, PosterOnClickListener listener) {
         this.movies = movies;
         this.context = context;
         this.listener = listener;
+
+        screenWidth = context.getResources().getConfiguration().screenWidthDp;
     }
 
     @Override
-    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MovieViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
         return new MovieViewHolder(view);
     }
@@ -52,10 +49,14 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         String posterPath = movie.getPosterPath();
 
         if (posterPath != null && !posterPath.isEmpty()) {
-            Picasso.with(context).load(BASE_URL_IMAGE + W342 + posterPath)
-                    .into(holder.moviePosterImageView);
-        }
 
+            // TODO: 10/19/2017 find out when recyclerview actually measures children
+            Picasso.with(context).load(BASE_URL_IMAGE + W185 + posterPath)
+                    .resize(screenWidth/3, 180)
+                    .centerCrop()
+                    .into(holder.moviePosterImageView);
+
+        }
     }
 
     @Override
@@ -63,6 +64,10 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         return movies.size();
     }
 
+
+    /**************************************************************************************
+     *
+     */
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView moviePosterImageView;
