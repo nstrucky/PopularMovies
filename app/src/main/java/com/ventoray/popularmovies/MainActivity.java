@@ -1,21 +1,14 @@
 package com.ventoray.popularmovies;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.os.HardwarePropertiesManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.net.URL;
@@ -23,9 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.DBConstants.POPULAR_ASC;
 import static com.ventoray.popularmovies.DBConstants.POPULAR_DESC;
-import static com.ventoray.popularmovies.DBConstants.RATING_ASC;
 import static com.ventoray.popularmovies.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         if (url != null && checkConnectivity(this)) {
             new MovieLoaderAsyncTask().execute(url);
         } else {
-            Toast.makeText(this, R.string.error_url_creation, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -95,10 +86,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Movie[] movies) {
-            if (movies.length > 0) {
-                mMovies.addAll(Arrays.asList(movies));
-                mAdapter.notifyDataSetChanged();
+            if (movies != null) {
+                if (movies.length > 0) {
+                    mMovies.addAll(Arrays.asList(movies));
+                    mAdapter.notifyDataSetChanged();
+                }
+            } else {
+                Toast.makeText(MainActivity.this,
+                        R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 

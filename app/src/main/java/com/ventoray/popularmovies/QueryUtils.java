@@ -104,11 +104,13 @@ public class QueryUtils {
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
-            Log.i(TAG, "response code " + urlConnection.getResponseCode());
+            Log.d(TAG, "response code " + urlConnection.getResponseCode());
             if (urlConnection.getResponseCode() == HTTP_RESPONSE_OK) {
                 in = urlConnection.getInputStream();
                 jsonToParse = getResponseFromHTTPUrl(in);
 
+            } else {
+                return null;
             }
 
         } catch (IOException e) {
@@ -149,7 +151,6 @@ public class QueryUtils {
             Log.d(TAG, e.getMessage());
         }
 
-        Log.i(TAG, stringBuilder.toString());
         return stringBuilder.toString();
     }
 
@@ -212,7 +213,6 @@ public class QueryUtils {
                 movie.setPopularity(popularity);
 
                 movies[i] = movie;
-                Log.i(TAG, movies[i].getTitle());
             }
 
             return movies;

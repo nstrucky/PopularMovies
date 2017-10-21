@@ -7,11 +7,17 @@ import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_IMAGE;
 import static com.ventoray.popularmovies.DBConstants.W780;
@@ -22,7 +28,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private TextView mMovieTextView;
     private TextView mSynopsisTextView;
+    private TextView mReleaseTextView;
     private ImageView mPosterImageView;
+
     private RatingBar mRatingBar;
     private Movie mMovie;
 
@@ -46,6 +54,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void bindViews() {
         mMovieTextView = (TextView) findViewById(R.id.tv_movie_title);
         mSynopsisTextView = (TextView) findViewById(R.id.tv_synopsis);
+        mReleaseTextView = (TextView) findViewById(R.id.tv_release_date);
         mPosterImageView = (ImageView) findViewById(R.id.iv_movie_poster);
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
     }
@@ -53,14 +62,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void updateUI() {
         if (mMovie != null) {
             String posterPath = mMovie.getPosterPath();
+            String releaseDate = DateUtil.formatDate(mMovie.getReleaseDate());
 
-
+            Log.d("DETAILS", "Date: " + mMovie.getReleaseDate());
 
             if (posterPath != null && !posterPath.isEmpty() && checkConnectivity(this))
                 Picasso.with(this).load(BASE_URL_IMAGE + W780 + posterPath).into(mPosterImageView);
 
             mMovieTextView.setText(mMovie.getTitle());
             mSynopsisTextView.setText(mMovie.getOverview());
+            mReleaseTextView.setText(releaseDate);
             mRatingBar.setRating((float) mMovie.getVoteAverage()/2);
 
 
