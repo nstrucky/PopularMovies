@@ -26,6 +26,7 @@ import java.util.List;
 import static com.ventoray.popularmovies.DBConstants.POPULAR_ASC;
 import static com.ventoray.popularmovies.DBConstants.POPULAR_DESC;
 import static com.ventoray.popularmovies.DBConstants.RATING_ASC;
+import static com.ventoray.popularmovies.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getMovieData(String type, int page) {
         URL url = QueryUtils.buildUrl(type, page);
-        if (url != null) {
+        if (url != null && checkConnectivity(this)) {
             new MovieLoaderAsyncTask().execute(url);
         } else {
             Toast.makeText(this, R.string.error_url_creation, Toast.LENGTH_SHORT).show();

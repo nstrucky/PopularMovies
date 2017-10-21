@@ -10,7 +10,7 @@ public class Movie implements Serializable {
 
     private int id;
     private int voteCount;
-    private int voteAverage;
+    private double voteAverage;
     private String title;
     private String overview;
     private String releaseDate;
@@ -41,11 +41,11 @@ public class Movie implements Serializable {
         this.voteCount = voteCount;
     }
 
-    public int getVoteAverage() {
+    public double getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(int voteAverage) {
+    public void setVoteAverage(double voteAverage) {
         this.voteAverage = voteAverage;
     }
 

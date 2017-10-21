@@ -1,6 +1,9 @@
 package com.ventoray.popularmovies;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,9 +14,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_IMAGE;
-import static com.ventoray.popularmovies.DBConstants.W342;
 import static com.ventoray.popularmovies.DBConstants.W780;
 import static com.ventoray.popularmovies.MainActivity.SERIALIZABLE_MOVIE_KEY;
+import static com.ventoray.popularmovies.NetworkUtils.checkConnectivity;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -37,7 +40,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         }
 
-        retrievePoster();
+        updateUI();
     }
 
     private void bindViews() {
@@ -47,17 +50,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mRatingBar = (RatingBar) findViewById(R.id.ratingBar);
     }
 
-    private void retrievePoster() {
+    private void updateUI() {
         if (mMovie != null) {
             String posterPath = mMovie.getPosterPath();
 
 
-            if (posterPath != null && !posterPath.isEmpty())
+
+            if (posterPath != null && !posterPath.isEmpty() && checkConnectivity(this))
                 Picasso.with(this).load(BASE_URL_IMAGE + W780 + posterPath).into(mPosterImageView);
 
             mMovieTextView.setText(mMovie.getTitle());
             mSynopsisTextView.setText(mMovie.getOverview());
-            mRatingBar.setRating(mMovie.getVoteAverage()/2);
+            mRatingBar.setRating((float) mMovie.getVoteAverage()/2);
 
 
 
