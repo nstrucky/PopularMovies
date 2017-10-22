@@ -119,10 +119,10 @@ public class MainActivity extends AppCompatActivity {
                 String rating = getString(R.string.rating);
 
                 if (title.equals(popular)) {
-                    getMovieData(DBConstants.POPULAR_DESC, 1);
+                    getMovieData(DBConstants.POPULAR, 1);
                     item.setTitle(rating);
                 } else {
-                    getMovieData(DBConstants.RATING_DESC, 1);
+                    getMovieData(DBConstants.TOP_RATED, 1);
                     item.setTitle(popular);
                 }
                 break;

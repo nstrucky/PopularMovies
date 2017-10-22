@@ -11,8 +11,6 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
  */
 
 public class NetworkUtils {
-
-
     /**
      *  Checks for internet connectivity - will need to replace with a network state broadcast listener
      * @return
@@ -21,8 +19,10 @@ public class NetworkUtils {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
-        if (networkInfo.isAvailable() && networkInfo.isConnected()) {
-            return true;
+        if (networkInfo != null) {
+            if (networkInfo.isAvailable() && networkInfo.isConnected()) {
+                return true;
+            }
         }
 
         return false;

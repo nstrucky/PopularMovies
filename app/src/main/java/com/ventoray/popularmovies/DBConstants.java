@@ -20,6 +20,8 @@ public class DBConstants {
     public static final String RATING_ASC = "vote_average.asc";
     public static final String POPULAR_DESC = "popularity.desc";
     public static final String RATING_DESC = "vote_average.desc";
+    public static final String POPULAR = "popular";
+    public static final String TOP_RATED = "top_rated";
 
     /**
      *  Image URL constants

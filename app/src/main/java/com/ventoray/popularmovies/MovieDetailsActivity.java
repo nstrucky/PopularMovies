@@ -1,9 +1,6 @@
 package com.ventoray.popularmovies;
 
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,11 +10,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_IMAGE;
 import static com.ventoray.popularmovies.DBConstants.W780;
@@ -66,8 +58,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             Log.d("DETAILS", "Date: " + mMovie.getReleaseDate());
 
-            if (posterPath != null && !posterPath.isEmpty() && checkConnectivity(this))
-                Picasso.with(this).load(BASE_URL_IMAGE + W780 + posterPath).into(mPosterImageView);
+            if (posterPath != null && checkConnectivity(this)){
+                if (!posterPath.isEmpty()) {
+                    Picasso.with(this).load(BASE_URL_IMAGE + W780 + posterPath).into(mPosterImageView);
+                }
+            }
 
             mMovieTextView.setText(mMovie.getTitle());
             mSynopsisTextView.setText(mMovie.getOverview());
