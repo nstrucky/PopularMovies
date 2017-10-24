@@ -1,7 +1,6 @@
 package com.ventoray.popularmovies;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.DBConstants.POPULAR_DESC;
+import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_POPULAR;
+import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_TOP_RATED;
 import static com.ventoray.popularmovies.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,15 +34,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpRecyclerView();
-        getMovieData(POPULAR_DESC, 1);
+        getMovieData(BASE_URL_MOVIE_POPULAR, null, 1);
 
     }
 
 
-    private void getMovieData(String type, int page) {
-        URL url = QueryUtils.buildUrl(type, page);
+    private void getMovieData(String baseUrl, String type, int page) {
+        URL url = QueryUtils.buildUrl(baseUrl, type, page);
         if (url != null && checkConnectivity(this)) {
-            new MovieLoaderAsyncTask().execute(url);
+            new MovieLoaderAsyncTask(new OnMoviesLoadedListener() {
+                @Override
+                public void onMoviesLoaded(Movie[] movies) {
+                    if (movies != null) {
+                        if (movies.length > 0) {
+                            mMovies.addAll(Arrays.asList(movies));
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this,
+                                R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).execute(url);
         } else {
             Toast.makeText(this, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
         }
@@ -70,34 +83,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    class MovieLoaderAsyncTask extends AsyncTask<URL, Void, Movie[]> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Movie[] doInBackground(URL... url) {
-            Movie[] movies = QueryUtils.makeHttpUrlRequest(url[0]);
-
-            return movies;
-        }
-
-        @Override
-        protected void onPostExecute(Movie[] movies) {
-            if (movies != null) {
-                if (movies.length > 0) {
-                    mMovies.addAll(Arrays.asList(movies));
-                    mAdapter.notifyDataSetChanged();
-                }
-            } else {
-                Toast.makeText(MainActivity.this,
-                        R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -119,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
                 String rating = getString(R.string.rating);
 
                 if (title.equals(popular)) {
-                    getMovieData(DBConstants.POPULAR, 1);
+                    getMovieData(BASE_URL_MOVIE_POPULAR, null, 1);
                     item.setTitle(rating);
                 } else {
-                    getMovieData(DBConstants.TOP_RATED, 1);
+                    getMovieData(BASE_URL_MOVIE_TOP_RATED, null, 1);
                     item.setTitle(popular);
                 }
                 break;

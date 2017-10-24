@@ -21,7 +21,9 @@ import java.net.URL;
 import static com.ventoray.popularmovies.DBConstants.ADULT;
 import static com.ventoray.popularmovies.DBConstants.API_KEY;
 import static com.ventoray.popularmovies.DBConstants.BACKDROP_PATH;
-import static com.ventoray.popularmovies.DBConstants.BASE_MOVIE_URL;
+import static com.ventoray.popularmovies.DBConstants.BASE_DISCOVER_URL;
+import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_POPULAR;
+import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_TOP_RATED;
 import static com.ventoray.popularmovies.DBConstants.EN_US;
 import static com.ventoray.popularmovies.DBConstants.HTTP_RESPONSE_OK;
 import static com.ventoray.popularmovies.DBConstants.ID;
@@ -56,22 +58,33 @@ public class QueryUtils {
             POPULAR_ASC,
             POPULAR_DESC,
             RATING_ASC,
-            RATING_DESC
+            RATING_DESC,
     })
     public @interface SortMethod {}
+
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef ({
+            BASE_URL_MOVIE_POPULAR,
+            BASE_URL_MOVIE_TOP_RATED,
+            BASE_DISCOVER_URL
+    })
+    public @interface BaseUrl {}
 
 
     private static final String TAG = "QueryUtils";
 
-    public static URL buildUrl(@SortMethod String sortBy, int pageNumber) {
-        URL url = null;
+    public static URL buildUrl(@BaseUrl String baseUrl, @SortMethod String sortBy, int pageNumber) {
+        URL url;
         Uri uri;
 
-        Uri.Builder builder = Uri.parse(BASE_MOVIE_URL)
+        Uri.Builder builder = Uri.parse(baseUrl)
                 .buildUpon()
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
-                .appendQueryParameter(PARAM_SORT_BY, sortBy)
                 .appendQueryParameter(PARAM_LANGUAGE, EN_US);
+
+        if (baseUrl.equals(BASE_DISCOVER_URL)) {
+            builder.appendQueryParameter(PARAM_SORT_BY, sortBy);
+        }
 
         if (pageNumber > 0 && pageNumber <= 1000) {
             String pageNumberString = Integer.toString(pageNumber);
@@ -79,6 +92,8 @@ public class QueryUtils {
         }
 
         uri = builder.build();
+
+        Log.d(TAG, uri.toString());
         try {
             url = new URL(uri.toString());
         } catch (MalformedURLException e) {
@@ -167,19 +182,19 @@ public class QueryUtils {
             jsonResponse = new JSONObject(jsonToParse);
             JSONArray resultsArray = jsonResponse.getJSONArray(RESULTS);
             movies = new Movie[resultsArray.length()];
-            int id = 0;
-            int voteCount = 0;
-            int voteAverage = 0;
-            String title = null;
-            String overview = null;
-            String releaseDate = null;
-            String posterPath = null;
-            String originalLanguage = null;
-            String originalTitle = null;
-            String backdropPath = null;
-            boolean adult = false;
-            boolean video = false;
-            double popularity = 0.0;
+            int id;
+            int voteCount;
+            int voteAverage;
+            String title;
+            String overview;
+            String releaseDate;
+            String posterPath;
+            String originalLanguage;
+            String originalTitle;
+            String backdropPath;
+            boolean adult;
+            boolean video;
+            double popularity;
 
             for (int i = 0; i < movies.length; i++) {
                 Movie movie = new Movie();

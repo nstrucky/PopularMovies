@@ -7,7 +7,7 @@ package com.ventoray.popularmovies;
 public class DBConstants {
 
 
-    public static final String API_KEY = "";
+    public static final String API_KEY = BuildConfig.TMDB_API_KEY;
     public static final String EN_US = "en-US";
 
     public static final String PARAM_API_KEY = "api_key";
@@ -15,13 +15,13 @@ public class DBConstants {
     public static final String PARAM_LANGUAGE = "language";
     public static final String PARAM_PAGE = "page";
 
-    public static final String BASE_MOVIE_URL = "https://api.themoviedb.org/3/discover/movie";
+    public static final String BASE_DISCOVER_URL = "https://api.themoviedb.org/3/discover/movie";
     public static final String POPULAR_ASC = "popularity.asc";
     public static final String RATING_ASC = "vote_average.asc";
     public static final String POPULAR_DESC = "popularity.desc";
     public static final String RATING_DESC = "vote_average.desc";
-    public static final String POPULAR = "popular";
-    public static final String TOP_RATED = "top_rated";
+    public static final String BASE_URL_MOVIE_POPULAR = "https://api.themoviedb.org/3/movie/popular";
+    public static final String BASE_URL_MOVIE_TOP_RATED = "https://api.themoviedb.org/3/movie/top_rated";
 
     /**
      *  Image URL constants
