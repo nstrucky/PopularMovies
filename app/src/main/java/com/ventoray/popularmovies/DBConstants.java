@@ -37,8 +37,6 @@ public class DBConstants {
 
     public static final int HTTP_RESPONSE_OK = 200;
 
-
-
     public static final String RESULTS = "results";
     public static final String VOTE_COUNT = "vote_count";
     public static final String ID = "id";

@@ -2,6 +2,8 @@ package com.ventoray.popularmovies;
 
 import android.os.AsyncTask;
 
+import com.ventoray.popularmovies.utils.QueryUtils;
+
 import java.net.URL;
 
 /**

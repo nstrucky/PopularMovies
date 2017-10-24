@@ -1,4 +1,4 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.utils;
 
 /**
  * Created by nicks on 10/21/2017.

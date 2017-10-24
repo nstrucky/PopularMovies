@@ -1,4 +1,4 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -20,7 +20,7 @@ public class NetworkUtils {
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
 
         if (networkInfo != null) {
-            if (networkInfo.isAvailable() && networkInfo.isConnected()) {
+            if (networkInfo.isAvailable() && networkInfo.isConnectedOrConnecting()) {
                 return true;
             }
         }

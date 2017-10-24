@@ -10,11 +10,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.ventoray.popularmovies.utils.DateUtil;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_IMAGE;
 import static com.ventoray.popularmovies.DBConstants.W780;
 import static com.ventoray.popularmovies.MainActivity.SERIALIZABLE_MOVIE_KEY;
-import static com.ventoray.popularmovies.NetworkUtils.checkConnectivity;
+import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 

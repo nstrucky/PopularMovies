@@ -50,9 +50,11 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
 
         if (posterPath != null && !posterPath.isEmpty()) {
 
+            int width = screenWidth/3;
+
             // TODO: 10/19/2017 find out when recyclerview actually measures children
             Picasso.with(context).load(BASE_URL_IMAGE + W185 + posterPath)
-                    .resize(screenWidth/3, 180)
+                    .resize(width, 180)
                     .centerCrop()
                     .into(holder.moviePosterImageView);
 

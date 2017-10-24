@@ -1,11 +1,15 @@
 package com.ventoray.popularmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
  * Created by Nick on 10/15/2017.
  */
 
+// TODO: 10/23/2017 implement Parceable instead of Serializable to improve performance 
 public class Movie implements Serializable {
 
     private int id;
@@ -22,7 +26,8 @@ public class Movie implements Serializable {
     private boolean video;
     private double popularity;
 
-    public Movie() {}
+    public Movie() {
+    }
 
 
     public int getId() {
@@ -128,4 +133,5 @@ public class Movie implements Serializable {
     public void setPopularity(double popularity) {
         this.popularity = popularity;
     }
+
 }

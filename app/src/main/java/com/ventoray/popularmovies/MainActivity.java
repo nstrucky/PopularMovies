@@ -10,6 +10,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.ventoray.popularmovies.utils.QueryUtils;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +19,7 @@ import java.util.List;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_POPULAR;
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_TOP_RATED;
-import static com.ventoray.popularmovies.NetworkUtils.checkConnectivity;
+import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_switch:
                 mMovies.clear();
+                mAdapter.notifyDataSetChanged();
                 String title = item.getTitle().toString();
                 String popular = getString(R.string.popular);
                 String rating = getString(R.string.rating);

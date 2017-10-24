@@ -1,8 +1,10 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.utils;
 
 import android.net.Uri;
 import android.support.annotation.StringDef;
 import android.util.Log;
+
+import com.ventoray.popularmovies.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
