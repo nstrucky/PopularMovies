@@ -14,7 +14,7 @@ import com.ventoray.popularmovies.utils.DateUtil;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_IMAGE;
 import static com.ventoray.popularmovies.DBConstants.W780;
-import static com.ventoray.popularmovies.MainActivity.SERIALIZABLE_MOVIE_KEY;
+import static com.ventoray.popularmovies.Movie.MOVIE_PARCEL_KEY;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MovieDetailsActivity extends AppCompatActivity {
@@ -36,8 +36,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         bindViews();
         Intent passedIntent = getIntent();
 
-        if (passedIntent.hasExtra(SERIALIZABLE_MOVIE_KEY)) {
-            mMovie = (Movie) passedIntent.getSerializableExtra(SERIALIZABLE_MOVIE_KEY);
+        if (passedIntent.hasExtra(MOVIE_PARCEL_KEY)) {
+//            mMovie = (Movie) passedIntent.getSerializableExtra(SERIALIZABLE_MOVIE_KEY);
+
+            mMovie = (Movie) passedIntent.getParcelableExtra(MOVIE_PARCEL_KEY);
 
         }
 

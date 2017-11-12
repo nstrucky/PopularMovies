@@ -3,135 +3,193 @@ package com.ventoray.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 /**
  * Created by Nick on 10/15/2017.
  */
 
 // TODO: 10/23/2017 implement Parceable instead of Serializable to improve performance 
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
 
-    private int id;
-    private int voteCount;
-    private double voteAverage;
-    private String title;
-    private String overview;
-    private String releaseDate;
-    private String posterPath;
-    private String originalLanguage;
-    private String originalTitle;
-    private String backdropPath;
-    private boolean adult;
-    private boolean video;
-    private double popularity;
+    public static final String MOVIE_PARCEL_KEY = "movieParcelKey";
+
+    private int mId;
+    private int mVoteCount;
+    private double mVoteAverage;
+    private String mTitle;
+    private String mOverview;
+    private String mReleaseDate;
+    private String mPosterPath;
+    private String mOriginalLanguage;
+    private String mOriginalTitle;
+    private String mBackdropPath;
+    private boolean mAdult;
+    private boolean mVideo;
+    private double mPopularity;
 
     public Movie() {
     }
 
-
-    public int getId() {
-        return id;
+    /**
+     * Called by creator to initialize variables
+     * @param in - Parcel containing class variables.  Note that they must be read in the same
+     *           order that they were written to the Parcel.
+     */
+    private Movie(Parcel in) {
+        mId = in.readInt();
+        mVoteCount = in.readInt();
+        mVoteAverage = in.readDouble();
+        mTitle = in.readString();
+        mOverview = in.readString();
+        mReleaseDate = in.readString();
+        mPosterPath = in.readString();
+        mOriginalLanguage = in.readString();
+        mOriginalTitle = in.readString();
+        mBackdropPath = in.readString();
+        mAdult = in.readByte() != 0; // written out as out.writeByte((byte) (booleanValue ? 1 : 0));
+        mVideo = in.readByte() != 0;
+        mPopularity = in.readDouble();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(mId);
+        out.writeInt(mVoteCount);
+        out.writeDouble(mVoteAverage);
+        out.writeString(mTitle);
+        out.writeString(mOverview);
+        out.writeString(mReleaseDate);
+        out.writeString(mPosterPath);
+        out.writeString(mOriginalLanguage);
+        out.writeString(mOriginalTitle);
+        out.writeString(mBackdropPath);
+        out.writeByte((byte) (mAdult ? 1 : 0));
+        out.writeByte((byte) (mVideo ? 1 : 0));
+        out.writeDouble(mPopularity);
+
+    }
+
+
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+
+
+    public int getId() {
+        return mId;
+    }
+
+    public void setId(int mId) {
+        this.mId = mId;
     }
 
     public int getVoteCount() {
-        return voteCount;
+        return mVoteCount;
     }
 
-    public void setVoteCount(int voteCount) {
-        this.voteCount = voteCount;
+    public void setVoteCount(int mVoteCount) {
+        this.mVoteCount = mVoteCount;
     }
 
     public double getVoteAverage() {
-        return voteAverage;
+        return mVoteAverage;
     }
 
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
+    public void setVoteAverage(double mVoteAverage) {
+        this.mVoteAverage = mVoteAverage;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(String mTitle) {
+        this.mTitle = mTitle;
     }
 
     public String getOverview() {
-        return overview;
+        return mOverview;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
+    public void setOverview(String mOverview) {
+        this.mOverview = mOverview;
     }
 
     public String getReleaseDate() {
-        return releaseDate;
+        return mReleaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setReleaseDate(String mReleaseDate) {
+        this.mReleaseDate = mReleaseDate;
     }
 
     public String getPosterPath() {
-        return posterPath;
+        return mPosterPath;
     }
 
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
+    public void setPosterPath(String mPosterPath) {
+        this.mPosterPath = mPosterPath;
     }
 
     public String getOriginalLanguage() {
-        return originalLanguage;
+        return mOriginalLanguage;
     }
 
-    public void setOriginalLanguage(String originalLanguage) {
-        this.originalLanguage = originalLanguage;
+    public void setOriginalLanguage(String mOriginalLanguage) {
+        this.mOriginalLanguage = mOriginalLanguage;
     }
 
     public String getOriginalTitle() {
-        return originalTitle;
+        return mOriginalTitle;
     }
 
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
+    public void setOriginalTitle(String mOriginalTitle) {
+        this.mOriginalTitle = mOriginalTitle;
     }
 
     public String getBackdropPath() {
-        return backdropPath;
+        return mBackdropPath;
     }
 
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
+    public void setBackdropPath(String mBackdropPath) {
+        this.mBackdropPath = mBackdropPath;
     }
 
     public boolean isAdult() {
-        return adult;
+        return mAdult;
     }
 
-    public void setAdult(boolean adult) {
-        this.adult = adult;
+    public void setAdult(boolean mAdult) {
+        this.mAdult = mAdult;
     }
 
     public boolean isVideo() {
-        return video;
+        return mVideo;
     }
 
-    public void setVideo(boolean video) {
-        this.video = video;
+    public void setVideo(boolean mVideo) {
+        this.mVideo = mVideo;
     }
 
     public double getPopularity() {
-        return popularity;
+        return mPopularity;
     }
 
-    public void setPopularity(double popularity) {
-        this.popularity = popularity;
+    public void setPopularity(double mPopularity) {
+        this.mPopularity = mPopularity;
     }
 
 }

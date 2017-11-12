@@ -19,6 +19,7 @@ import java.util.List;
 
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_POPULAR;
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_TOP_RATED;
+import static com.ventoray.popularmovies.Movie.MOVIE_PARCEL_KEY;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private MoviePosterAdapter mAdapter;
     private MoviePosterAdapter.PosterOnClickListener posterListener;
 
-    public static final String SERIALIZABLE_MOVIE_KEY = "serializableMovieKey";
+//    public static final String SERIALIZABLE_MOVIE_KEY = "serializableMovieKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(Movie movie) {
                 Intent intent = new Intent(getApplicationContext(), MovieDetailsActivity.class);
-                intent.putExtra(SERIALIZABLE_MOVIE_KEY, movie);
+                intent.putExtra(MOVIE_PARCEL_KEY, movie);
 
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
