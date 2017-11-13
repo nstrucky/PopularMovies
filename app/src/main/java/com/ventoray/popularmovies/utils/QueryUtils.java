@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.ventoray.popularmovies.DBConstants.ADULT;
-import static com.ventoray.popularmovies.DBConstants.API_KEY;
+import static com.ventoray.popularmovies.DBConstants.API_KEY_TMDB;
 import static com.ventoray.popularmovies.DBConstants.BACKDROP_PATH;
 import static com.ventoray.popularmovies.DBConstants.BASE_DISCOVER_URL;
 import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_POPULAR;
@@ -81,7 +81,7 @@ public class QueryUtils {
 
         Uri.Builder builder = Uri.parse(baseUrl)
                 .buildUpon()
-                .appendQueryParameter(PARAM_API_KEY, API_KEY)
+                .appendQueryParameter(PARAM_API_KEY, API_KEY_TMDB)
                 .appendQueryParameter(PARAM_LANGUAGE, EN_US);
 
         if (baseUrl.equals(BASE_DISCOVER_URL)) {
@@ -228,6 +228,9 @@ public class QueryUtils {
                 movie.setAdult(adult);
                 movie.setVideo(video);
                 movie.setPopularity(popularity);
+
+                Log.d(TAG, "Movie: " + movie.getTitle());
+                Log.d(TAG, "ID: " + movie.getId());
 
                 movies[i] = movie;
             }

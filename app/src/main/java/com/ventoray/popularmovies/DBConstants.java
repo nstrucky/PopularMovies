@@ -7,7 +7,7 @@ package com.ventoray.popularmovies;
 public class DBConstants {
 
 
-    public static final String API_KEY = BuildConfig.TMDB_API_KEY;
+    public static final String API_KEY_TMDB = BuildConfig.TMDB_API_KEY;
     public static final String EN_US = "en-US";
 
     public static final String PARAM_API_KEY = "api_key";

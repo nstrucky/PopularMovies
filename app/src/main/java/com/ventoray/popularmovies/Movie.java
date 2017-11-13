@@ -7,7 +7,6 @@ import android.os.Parcelable;
  * Created by Nick on 10/15/2017.
  */
 
-// TODO: 10/23/2017 implement Parceable instead of Serializable to improve performance 
 public class Movie implements Parcelable {
 
     public static final String MOVIE_PARCEL_KEY = "movieParcelKey";
@@ -45,7 +44,7 @@ public class Movie implements Parcelable {
         mOriginalLanguage = in.readString();
         mOriginalTitle = in.readString();
         mBackdropPath = in.readString();
-        mAdult = in.readByte() != 0; // written out as out.writeByte((byte) (booleanValue ? 1 : 0));
+        mAdult = in.readByte() != 0; // written out as out.writeByte((byte) (mAdult ? 1 : 0));
         mVideo = in.readByte() != 0;
         mPopularity = in.readDouble();
     }

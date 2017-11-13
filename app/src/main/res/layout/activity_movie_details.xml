@@ -1,66 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    tools:context="com.ventoray.popularmovies.MovieDetailsActivity">
+    android:orientation="vertical"
+    android:background="@android:color/black">
 
-
-    <TextView
-        android:id="@+id/tv_movie_title"
+    <RelativeLayout
+        android:id="@+id/relative_layout_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-smallcaps"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="@android:color/white"
-        android:textSize="24sp" />
+        android:layout_height="300dp">
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-smallcaps"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="@android:color/white"
-        android:id="@+id/tv_release_date"
-        android:layout_below="@id/tv_movie_title"/>
+        <ImageView
+            android:id="@+id/iv_movie_poster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient" />
 
 
-    <ImageView
-        android:id="@+id/iv_movie_poster"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/scrollView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_movie_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    tools:text="Jumanji" />
+
+
+                <TextView
+                    android:id="@+id/tv_release_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="@android:color/white"
+                    tools:text="January 4th, 1990" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" />
+
+
+                <TextView
+                    android:id="@+id/tv_synopsis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:gravity="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    tools:text="This is the synopsys" />
+
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="@style/Base.Widget.AppCompat.RatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tv_release_date" />
+        android:background="@color/yellow"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        >
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient" />
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/Base.Widget.AppCompat.RatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:progressTint="@color/yellow" />
-
-    <TextView
-        android:id="@+id/tv_synopsis"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/ratingBar"
-        android:fontFamily="sans-serif"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="@android:color/white"
-        android:textSize="12sp" />
+    </android.support.v7.widget.RecyclerView>
 
 
-</RelativeLayout>
+</LinearLayout>
+
+
+
+
