@@ -1,6 +1,8 @@
 package com.ventoray.popularmovies;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private Movie mMovie;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +40,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Intent passedIntent = getIntent();
 
         if (passedIntent.hasExtra(MOVIE_PARCEL_KEY)) {
-//            mMovie = (Movie) passedIntent.getSerializableExtra(SERIALIZABLE_MOVIE_KEY);
-
             mMovie = (Movie) passedIntent.getParcelableExtra(MOVIE_PARCEL_KEY);
 
         }
-
+        setUpViewPager();
         updateUI();
+    }
+
+
+    private void setUpViewPager() {
+        ViewPager mPager = findViewById(R.id.pager_details);
+        TabLayout mTabLayout = findViewById(R.id.tablayout);
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        mTabLayout.setTabTextColors(getColor(R.color.colorPrimary), getColor(R.color.yellow));
+        mTabLayout.setupWithViewPager(mPager);
+        mPager.setAdapter(new ReviewVideoPagerAdapter(getSupportFragmentManager()));
     }
 
     private void bindViews() {
@@ -71,11 +82,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             mSynopsisTextView.setText(mMovie.getOverview());
             mReleaseTextView.setText(releaseDate);
             mRatingBar.setRating((float) mMovie.getVoteAverage()/2);
-
-
-
         }
-
     }
 
 
