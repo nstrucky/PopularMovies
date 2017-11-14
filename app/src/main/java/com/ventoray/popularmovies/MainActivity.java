@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_POPULAR;
-import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_TOP_RATED;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
 import static com.ventoray.popularmovies.Movie.MOVIE_PARCEL_KEY;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
@@ -43,14 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getMovieData(String baseUrl, String type, int page) {
-        URL url = QueryUtils.buildUrl(baseUrl, type, page);
+        URL url = QueryUtils.buildTmdbUrl(baseUrl, type, page);
+
         if (url != null && checkConnectivity(this)) {
-            new MovieLoaderAsyncTask(new OnMoviesLoadedListener() {
+            new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
                 @Override
-                public void onMoviesLoaded(Movie[] movies) {
+                public void onMoviesLoaded(Object[] movies) {
                     if (movies != null) {
                         if (movies.length > 0) {
-                            mMovies.addAll(Arrays.asList(movies));
+                            mMovies.addAll(Arrays.asList((Movie[])movies));
                             mAdapter.notifyDataSetChanged();
                         }
                     } else {

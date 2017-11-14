@@ -11,8 +11,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import static com.ventoray.popularmovies.DBConstants.BASE_URL_IMAGE;
-import static com.ventoray.popularmovies.DBConstants.W185;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_IMAGE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.W185;
 /**
  * Created by Nick on 10/16/2017.
  */

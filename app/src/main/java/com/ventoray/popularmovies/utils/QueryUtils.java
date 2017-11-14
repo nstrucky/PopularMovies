@@ -1,10 +1,13 @@
 package com.ventoray.popularmovies.utils;
 
+import android.content.UriMatcher;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.StringDef;
 import android.util.Log;
 
 import com.ventoray.popularmovies.Movie;
+import com.ventoray.popularmovies.Review;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,34 +23,46 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.ventoray.popularmovies.DBConstants.ADULT;
-import static com.ventoray.popularmovies.DBConstants.API_KEY_TMDB;
-import static com.ventoray.popularmovies.DBConstants.BACKDROP_PATH;
-import static com.ventoray.popularmovies.DBConstants.BASE_DISCOVER_URL;
-import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_POPULAR;
-import static com.ventoray.popularmovies.DBConstants.BASE_URL_MOVIE_TOP_RATED;
-import static com.ventoray.popularmovies.DBConstants.EN_US;
-import static com.ventoray.popularmovies.DBConstants.HTTP_RESPONSE_OK;
-import static com.ventoray.popularmovies.DBConstants.ID;
-import static com.ventoray.popularmovies.DBConstants.ORIGINAL_LANGUAGE;
-import static com.ventoray.popularmovies.DBConstants.ORIGINAL_TITLE;
-import static com.ventoray.popularmovies.DBConstants.OVERVIEW;
-import static com.ventoray.popularmovies.DBConstants.PARAM_API_KEY;
-import static com.ventoray.popularmovies.DBConstants.PARAM_LANGUAGE;
-import static com.ventoray.popularmovies.DBConstants.PARAM_PAGE;
-import static com.ventoray.popularmovies.DBConstants.PARAM_SORT_BY;
-import static com.ventoray.popularmovies.DBConstants.POPULARITY;
-import static com.ventoray.popularmovies.DBConstants.POPULAR_ASC;
-import static com.ventoray.popularmovies.DBConstants.POPULAR_DESC;
-import static com.ventoray.popularmovies.DBConstants.POSTER_PATH;
-import static com.ventoray.popularmovies.DBConstants.RATING_ASC;
-import static com.ventoray.popularmovies.DBConstants.RATING_DESC;
-import static com.ventoray.popularmovies.DBConstants.RELEASE_DATE;
-import static com.ventoray.popularmovies.DBConstants.RESULTS;
-import static com.ventoray.popularmovies.DBConstants.TITLE;
-import static com.ventoray.popularmovies.DBConstants.VIDEO;
-import static com.ventoray.popularmovies.DBConstants.VOTE_AVERAGE;
-import static com.ventoray.popularmovies.DBConstants.VOTE_COUNT;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.ADULT;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.API_KEY_TMDB;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.BACKDROP_PATH;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_DISCOVER_URL;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.EN_US;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.HTTP_RESPONSE_OK;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.ID;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.ORIGINAL_LANGUAGE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.ORIGINAL_TITLE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.OVERVIEW;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PARAM_API_KEY;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PARAM_LANGUAGE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PARAM_PAGE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PARAM_SORT_BY;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PATH_3;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PATH_DISCOVER_MOVIES;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PATH_MOVIES;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PATH_MOVIES_POPULAR;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PATH_MOVIES_TOP_RATED;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PATH_MOVIE_REVIEWS;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.PATH_MOVIE_VIDEOS;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.POPULARITY;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.POPULAR_ASC;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.POPULAR_DESC;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.POSTER_PATH;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.RATING_ASC;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.RATING_DESC;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.RELEASE_DATE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.RESULTS;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.REVIEW_AUTHOR;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.REVIEW_CONTENT;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.REVIEW_ID;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.REVIEW_URL;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.TITLE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.TMDB_AUTHORITY;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.VIDEO;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.VOTE_AVERAGE;
+import static com.ventoray.popularmovies.WebApiConstants.TMDB.VOTE_COUNT;
 
 /**
  * Created by Nick on 10/15/2017.
@@ -75,9 +90,59 @@ public class QueryUtils {
 
     private static final String TAG = "QueryUtils";
 
-    public static URL buildUrl(@BaseUrl String baseUrl, @SortMethod String sortBy, int pageNumber) {
-        URL url;
+    public static final int TMDB_REVIEWS = 1000;
+    public static final int TMDB_VIDEOS = 1001;
+    public static final int TMDB_POPULAR = 1002;
+    public static final int TMDB_TOP_RATED = 1003;
+    public static final int TMDB_DISCOVER = 1004;
+
+    private static int sTmdbUriType = 0;
+
+
+    public static UriMatcher buildUriMatcher() {
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_REVIEWS, TMDB_REVIEWS);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_VIDEOS, TMDB_VIDEOS);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_POPULAR, TMDB_POPULAR);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_TOP_RATED, TMDB_TOP_RATED);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_DISCOVER_MOVIES, TMDB_DISCOVER);
+
+        return uriMatcher;
+    }
+
+
+    public static URL buildReviewsUrl(String baseUrl, String movieId) {
+
         Uri uri;
+        URL url;
+
+        Uri.Builder builder = Uri.parse(baseUrl).buildUpon()
+                .appendPath(PATH_3)
+                .appendPath(PATH_MOVIES)
+                .appendPath(movieId)
+                .appendPath(PATH_MOVIE_REVIEWS)
+                .appendQueryParameter(PARAM_API_KEY, API_KEY_TMDB);
+
+        uri = builder.build();
+        sTmdbUriType = TMDB_REVIEWS;
+        Log.d(TAG, "URI TYPE ------------------------ " + sTmdbUriType);
+
+        Log.d(TAG, uri.toString());
+        try {
+            url = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+        return url;
+    }
+
+
+    public static URL buildTmdbUrl(@BaseUrl String baseUrl, @SortMethod String sortBy, int pageNumber) {
+        Uri uri;
+        URL url;
 
         Uri.Builder builder = Uri.parse(baseUrl)
                 .buildUpon()
@@ -94,6 +159,7 @@ public class QueryUtils {
         }
 
         uri = builder.build();
+        sTmdbUriType = buildUriMatcher().match(uri);
 
         Log.d(TAG, uri.toString());
         try {
@@ -106,13 +172,14 @@ public class QueryUtils {
         return url;
     }
 
+
     /**
      * This method is called in the AsyncTask in the MainActivity
-     * @param url - url built in buildUrl() to retrieve movies in specified order
+     * @param url - url built in buildTmdbUrl() to retrieve movies in specified order
      * @return - returns List of Movies to pass to adapter class
      * @throws IOException
      */
-    public static Movie[] makeHttpUrlRequest(URL url) {
+    public static Object[] makeHttpUrlRequest(URL url) {
         InputStream in = null;
         String jsonToParse = null;
         HttpURLConnection urlConnection = null;
@@ -146,7 +213,17 @@ public class QueryUtils {
             }
         }
 
-        return parseJson(jsonToParse);
+        switch (sTmdbUriType) {
+            case TMDB_DISCOVER:
+            case TMDB_POPULAR:
+            case TMDB_TOP_RATED:
+                return parseMoviesFromJson(jsonToParse);
+
+            case TMDB_REVIEWS:
+                return parseReviewsFromJson(jsonToParse);
+                default:
+                    return null;
+        }
     }
 
     /**
@@ -172,7 +249,47 @@ public class QueryUtils {
     }
 
 
-    private static Movie[] parseJson(String jsonToParse) {
+    private static Review[] parseReviewsFromJson(String jsonToParse) {
+        JSONObject jsonResponse;
+        Review[] reviews = null;
+        if (jsonToParse == null || jsonToParse.isEmpty()) {
+            return null;
+        }
+
+        try {
+            jsonResponse = new JSONObject(jsonToParse);
+            JSONArray resultsArray = jsonResponse.getJSONArray(RESULTS);
+            reviews = new Review[resultsArray.length()];
+            String id;
+            String author;
+            String content;
+            String url;
+
+            for (int i = 0; i < reviews.length; i++) {
+                Review review = new Review();
+                JSONObject jsonObject = resultsArray.getJSONObject(i);
+                id = jsonObject.getString(REVIEW_ID);
+                author = jsonObject.getString(REVIEW_AUTHOR);
+                content = jsonObject.getString(REVIEW_CONTENT);
+                url = jsonObject.getString(REVIEW_URL);
+
+                review.setmId(id);
+                review.setmAuthor(author);
+                review.setmContent(content);
+                review.setmUrl(url);
+
+                reviews[i] = review;
+            }
+
+            return reviews;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return reviews;
+    }
+
+
+    private static Movie[] parseMoviesFromJson(String jsonToParse) {
         JSONObject jsonResponse;
         Movie[] movies;
 

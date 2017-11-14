@@ -10,11 +10,11 @@ import java.net.URL;
  * Created by nicks on 10/23/2017.
  */
 
-public class MovieLoaderAsyncTask extends AsyncTask <URL, Void, Movie[]> {
+public class MovieDataAsyncTask extends AsyncTask <URL, Void, Object[]> {
 
-    private OnMoviesLoadedListener listener;
+    private OnMovieDataLoadedListener listener;
 
-    public MovieLoaderAsyncTask(OnMoviesLoadedListener listener) {
+    public MovieDataAsyncTask(OnMovieDataLoadedListener listener) {
         this.listener = listener;
     }
 
@@ -24,13 +24,14 @@ public class MovieLoaderAsyncTask extends AsyncTask <URL, Void, Movie[]> {
     }
 
     @Override
-    protected Movie[] doInBackground(URL... url) {
+    protected Object[] doInBackground(URL... url) {
         return QueryUtils.makeHttpUrlRequest(url[0]);
     }
 
     @Override
-    protected void onPostExecute(Movie[] movies) {
-        listener.onMoviesLoaded(movies);
+    protected void onPostExecute(Object[] movieData) {
+
+        listener.onMoviesLoaded(movieData);
 
     }
 
