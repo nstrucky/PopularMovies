@@ -26,6 +26,7 @@ import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.ADULT;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.API_KEY_TMDB;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BACKDROP_PATH;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_DISCOVER_URL;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_TMBD_URI;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.EN_US;
@@ -98,6 +99,7 @@ public class QueryUtils {
     private static int sTmdbUriType = 0;
 
 
+    // TODO: 11/15/2017 maybe remove this as it is not really necessary 
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -111,21 +113,26 @@ public class QueryUtils {
     }
 
 
-    public static URL buildReviewsUrl(String baseUrl, String movieId) {
+    /**
+     * Method is used to build a URL retrieving either videos or reviews assocated with a movie
+     * @param movieId - Tmdb id associated with movie
+     * @param path - either /reviews or /videos
+     * @return - URL used to fetch data
+     */
+    public static URL buildMovieDataUrl(String movieId, String path) {
 
         Uri uri;
         URL url;
 
-        Uri.Builder builder = Uri.parse(baseUrl).buildUpon()
+        Uri.Builder builder = Uri.parse(BASE_TMBD_URI).buildUpon()
                 .appendPath(PATH_3)
                 .appendPath(PATH_MOVIES)
                 .appendPath(movieId)
-                .appendPath(PATH_MOVIE_REVIEWS)
+                .appendPath(path)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY_TMDB);
 
         uri = builder.build();
         sTmdbUriType = TMDB_REVIEWS;
-        Log.d(TAG, "URI TYPE ------------------------ " + sTmdbUriType);
 
         Log.d(TAG, uri.toString());
         try {
@@ -139,7 +146,7 @@ public class QueryUtils {
     }
 
 
-    public static URL buildTmdbUrl(@BaseUrl String baseUrl, @SortMethod String sortBy, int pageNumber) {
+    public static URL buildMoviesUrl(@BaseUrl String baseUrl, @SortMethod String sortBy, int pageNumber) {
         Uri uri;
         URL url;
 
@@ -174,7 +181,7 @@ public class QueryUtils {
 
     /**
      * This method is called in the AsyncTask in the MainActivity
-     * @param url - url built in buildTmdbUrl() to retrieve movies in specified order
+     * @param url - url built in buildMoviesUrl() to retrieve movies in specified order
      * @return - returns List of Movies to pass to adapter class
      * @throws IOException
      */

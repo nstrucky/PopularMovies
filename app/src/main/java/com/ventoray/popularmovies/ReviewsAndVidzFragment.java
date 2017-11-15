@@ -27,6 +27,7 @@ import java.util.List;
 
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_TMBD_URI;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_REVIEWS;
 
 
 /**
@@ -118,16 +119,15 @@ public class ReviewsAndVidzFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(mAdapter);
-        getReviews(BASE_TMBD_URI, String.valueOf(mMovie.getId()));
+        getReviews(String.valueOf(mMovie.getId()));
     }
 
     /**
      * Retrieves the comments (reviews) related to the Movie object associated with the MovieDetailsActivity
-     * @param baseUrl Base TMDB URI found in WebApiConstants
      * @param movieId ID of Object passed to MoviesDetailsActivity
      */
-    private void getReviews(String baseUrl, String movieId) {
-        URL url = QueryUtils.buildReviewsUrl(baseUrl, movieId);
+    private void getReviews(String movieId) {
+        URL url = QueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_REVIEWS);
         if (url != null && checkConnectivity(mContext)) {
             new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
                 @Override

@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getMovieData(String baseUrl, String type, int page) {
-        URL url = QueryUtils.buildTmdbUrl(baseUrl, type, page);
+        URL url = QueryUtils.buildMoviesUrl(baseUrl, type, page);
 
         if (url != null && checkConnectivity(this)) {
             new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
