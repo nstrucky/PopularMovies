@@ -10,8 +10,8 @@ public interface OnMovieDataLoadedListener {
     /**
      * Called in MovieDataAsyncTask opPostExecute() to notify listening activity and pass
      * the array of movie objects.
-     * @param movies
+     * @param objects
      */
-    public void onMoviesLoaded(Object[] movies);
+    void onMoviesLoaded(Object[] objects);
 
 }

@@ -10,18 +10,12 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.ventoray.popularmovies.utils.DateUtil;
-import com.ventoray.popularmovies.utils.QueryUtils;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_TMBD_URI;
 import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_IMAGE;
 import static com.ventoray.popularmovies.WebApiConstants.TMDB.W780;
 import static com.ventoray.popularmovies.Movie.MOVIE_PARCEL_KEY;
@@ -37,8 +31,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private RatingBar mRatingBar;
     private Movie mMovie;
 
-    private List<Review> mReviews;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +41,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         if (passedIntent.hasExtra(MOVIE_PARCEL_KEY)) {
             mMovie = (Movie) passedIntent.getParcelableExtra(MOVIE_PARCEL_KEY);
-            getReviews(BASE_TMBD_URI, String.valueOf(mMovie.getId()));
 
         }
-
 
         setUpViewPager();
         updateUI();
@@ -65,7 +55,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         mTabLayout.setTabTextColors(getColor(R.color.colorPrimary), getColor(R.color.yellow));
         mTabLayout.setupWithViewPager(mPager);
-        mPager.setAdapter(new ReviewVideoPagerAdapter(getSupportFragmentManager()));
+        mPager.setAdapter(new ReviewVideoPagerAdapter(getSupportFragmentManager(), this));
     }
 
     private void bindViews() {
@@ -100,39 +90,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void setUpActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
-
-
-    private void getReviews(String baseUrl, String movieId) {
-        URL url = QueryUtils.buildReviewsUrl(baseUrl, movieId);
-        mReviews = new ArrayList<>();
-
-        if (url != null && checkConnectivity(this)) {
-            new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
-                @Override
-                public void onMoviesLoaded(Object[] reviews) {
-                    if (reviews != null) {
-                        if (reviews.length > 0) {
-                            mReviews.addAll(Arrays.asList((Review[])reviews));
-//                            mAdapter.notifyDataSetChanged();
-
-                            for (Review review: mReviews) {
-                                Log.i("DETAILS ACTIVITY: ", review.getmContent());
-                            }
-                        }
-                    } else {
-                        Toast.makeText(MovieDetailsActivity.this,
-                                R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }).execute(url);
-        } else {
-            Toast.makeText(this, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
-        }
+    public Movie getMovie() {
+        return mMovie;
     }
+
+
 
 
 }
