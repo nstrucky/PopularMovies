@@ -12,13 +12,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.ventoray.popularmovies.adapters.ReviewVideoPagerAdapter;
+import com.ventoray.popularmovies.data_object.Movie;
 import com.ventoray.popularmovies.utils.DateUtil;
 
-import java.util.List;
-
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_IMAGE;
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.W780;
-import static com.ventoray.popularmovies.Movie.MOVIE_PARCEL_KEY;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_IMAGE;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.W780;
+import static com.ventoray.popularmovies.data_object.Movie.MOVIE_PARCEL_KEY;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MovieDetailsActivity extends AppCompatActivity {

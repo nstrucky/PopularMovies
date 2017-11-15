@@ -1,4 +1,4 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.async;
 
 import android.os.AsyncTask;
 

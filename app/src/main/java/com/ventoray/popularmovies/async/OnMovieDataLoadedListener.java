@@ -1,4 +1,4 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.async;
 
 /**
  * Created by nicks on 10/23/2017.

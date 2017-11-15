@@ -10,6 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.ventoray.popularmovies.adapters.MoviePosterAdapter;
+import com.ventoray.popularmovies.async.MovieDataAsyncTask;
+import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
+import com.ventoray.popularmovies.data_object.Movie;
 import com.ventoray.popularmovies.utils.QueryUtils;
 
 import java.net.URL;
@@ -17,9 +21,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
-import static com.ventoray.popularmovies.Movie.MOVIE_PARCEL_KEY;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
+import static com.ventoray.popularmovies.data_object.Movie.MOVIE_PARCEL_KEY;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,9 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private List<Movie> mMovies;
     private RecyclerView mRecyclerView;
     private MoviePosterAdapter mAdapter;
-    private MoviePosterAdapter.PosterOnClickListener posterListener;
-
-//    public static final String SERIALIZABLE_MOVIE_KEY = "serializableMovieKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

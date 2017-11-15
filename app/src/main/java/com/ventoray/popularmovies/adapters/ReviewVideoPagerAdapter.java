@@ -1,10 +1,11 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.ventoray.popularmovies.R;
 import com.ventoray.popularmovies.ReviewsAndVidzFragment;
 
 /**
@@ -36,9 +37,6 @@ public class ReviewVideoPagerAdapter extends FragmentPagerAdapter {
             default:
                 pageTitle = mContext.getString(R.string.error);
         }
-
-
-
         return pageTitle;
     }
 

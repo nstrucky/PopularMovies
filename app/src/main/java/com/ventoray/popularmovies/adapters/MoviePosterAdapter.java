@@ -1,4 +1,4 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,18 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.ventoray.popularmovies.data_object.Movie;
+import com.ventoray.popularmovies.R;
 
 import java.util.List;
 
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_URL_IMAGE;
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.W185;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_IMAGE;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.W185;
 /**
  * Created by Nick on 10/16/2017.
  */
 
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.MovieViewHolder> {
 
-    interface PosterOnClickListener {
+    public interface PosterOnClickListener {
         void onClick(Movie movie);
     }
 

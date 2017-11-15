@@ -11,9 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ventoray.popularmovies.adapters.ReviewsRecyclerAdapter;
+import com.ventoray.popularmovies.async.MovieDataAsyncTask;
+import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
+import com.ventoray.popularmovies.data_object.Movie;
+import com.ventoray.popularmovies.data_object.Review;
 import com.ventoray.popularmovies.utils.QueryUtils;
 
 import java.net.URL;
@@ -21,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.WebApiConstants.TMDB.BASE_TMBD_URI;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_TMBD_URI;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 
@@ -93,7 +97,7 @@ public class ReviewsAndVidzFragment extends Fragment {
 
             case PAGE_TYPE_REVIEWS:
                 setUpReviewsView();
-                getReviews(BASE_TMBD_URI, String.valueOf(mMovie.getId()));
+
                 break;
             default:
                     Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_SHORT).show();
@@ -112,12 +116,9 @@ public class ReviewsAndVidzFragment extends Fragment {
         mAdapter = new ReviewsRecyclerAdapter(mReviews, mContext);
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
-
-
+        getReviews(BASE_TMBD_URI, String.valueOf(mMovie.getId()));
     }
 
     /**

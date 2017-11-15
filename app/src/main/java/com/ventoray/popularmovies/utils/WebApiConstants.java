@@ -1,4 +1,6 @@
-package com.ventoray.popularmovies;
+package com.ventoray.popularmovies.utils;
+
+import com.ventoray.popularmovies.BuildConfig;
 
 /**
  * Created by Nick on 11/13/2017.
