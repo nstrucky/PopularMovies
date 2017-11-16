@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_TMBD_URI;
+import static com.ventoray.popularmovies.utils.QueryUtils.URL_TYPE_TMDB_REVIEWS;
+import static com.ventoray.popularmovies.utils.QueryUtils.URL_TYPE_TMDB_VIDEOS;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_REVIEWS;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_VIDEOS;
@@ -129,7 +130,7 @@ public class ReviewsAndVidzFragment extends Fragment {
     private void getReviews(String movieId) {
         URL url = QueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_REVIEWS);
         if (url != null && checkConnectivity(mContext)) {
-            new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
+            new MovieDataAsyncTask(URL_TYPE_TMDB_REVIEWS, new OnMovieDataLoadedListener() {
                 @Override
                 public void onMovieDataLoaded(Object[] reviews) {
                     if (reviews != null) {
@@ -150,10 +151,15 @@ public class ReviewsAndVidzFragment extends Fragment {
     }
 
 
+    /**
+     * Retrieves data for videos associated with the activity's Movie, stores them in an ArrayList
+     * of VideoData objects.
+     * @param movieId ID of Object passed to MoviesDetailsActivity
+     */
     private void getVideoDataList(String movieId) {
         URL url = QueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_VIDEOS);
         if (url != null && checkConnectivity(mContext)) {
-                new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
+                new MovieDataAsyncTask(URL_TYPE_TMDB_VIDEOS, new OnMovieDataLoadedListener() {
                     @Override
                     public void onMovieDataLoaded(Object[] videoDataArray) {
                         if (videoDataArray.length > 0) {

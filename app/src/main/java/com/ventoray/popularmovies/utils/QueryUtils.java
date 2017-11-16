@@ -101,24 +101,22 @@ public class QueryUtils {
 
     private static final String TAG = "QueryUtils";
 
-    public static final int TMDB_REVIEWS = 1000;
-    public static final int TMDB_VIDEOS = 1001;
-    public static final int TMDB_POPULAR = 1002;
-    public static final int TMDB_TOP_RATED = 1003;
-    public static final int TMDB_DISCOVER = 1004;
-
-    private static int sTmdbUriType = 0;
+    public static final int URL_TYPE_TMDB_REVIEWS = 1000;
+    public static final int URL_TYPE_TMDB_VIDEOS = 1001;
+    public static final int URL_TYPE_TMDB_POPULAR = 1002;
+    public static final int URL_TYPE_TMDB_TOP_RATED = 1003;
+    public static final int URL_TYPE_TMDB_DISCOVER = 1004;
 
 
     // TODO: 11/15/2017 maybe remove this as it is not really necessary 
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_REVIEWS, TMDB_REVIEWS);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_VIDEOS, TMDB_VIDEOS);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_POPULAR, TMDB_POPULAR);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_TOP_RATED, TMDB_TOP_RATED);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_DISCOVER_MOVIES, TMDB_DISCOVER);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_REVIEWS, URL_TYPE_TMDB_REVIEWS);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_VIDEOS, URL_TYPE_TMDB_VIDEOS);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_POPULAR, URL_TYPE_TMDB_POPULAR);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_TOP_RATED, URL_TYPE_TMDB_TOP_RATED);
+        uriMatcher.addURI(TMDB_AUTHORITY, PATH_DISCOVER_MOVIES, URL_TYPE_TMDB_DISCOVER);
 
         return uriMatcher;
     }
@@ -143,13 +141,6 @@ public class QueryUtils {
                 .appendQueryParameter(PARAM_API_KEY, API_KEY_TMDB);
 
         uri = builder.build();
-
-        if (path.equals(PATH_MOVIE_REVIEWS)) {
-            sTmdbUriType = TMDB_REVIEWS;
-        } else if (path.equals(PATH_MOVIE_VIDEOS)) {
-            sTmdbUriType = TMDB_VIDEOS;
-        }
-
 
         Log.d(TAG, uri.toString());
         try {
@@ -182,7 +173,6 @@ public class QueryUtils {
         }
 
         uri = builder.build();
-        sTmdbUriType = buildUriMatcher().match(uri);
 
         Log.d(TAG, uri.toString());
         try {
@@ -201,7 +191,7 @@ public class QueryUtils {
      * @param url - url built in buildMoviesUrl() to retrieve movies in specified order
      * @return - returns List of Movies to pass to adapter class
      */
-    public static Object[] makeHttpUrlRequest(URL url) {
+    public static Object[] makeHttpUrlRequest(URL url, int tmdbUrlType) {
         InputStream in = null;
         String jsonToParse = null;
         HttpURLConnection urlConnection = null;
@@ -235,16 +225,16 @@ public class QueryUtils {
             }
         }
 
-        switch (sTmdbUriType) {
-            case TMDB_DISCOVER:
-            case TMDB_POPULAR:
-            case TMDB_TOP_RATED:
+        switch (tmdbUrlType) {
+            case URL_TYPE_TMDB_DISCOVER:
+            case URL_TYPE_TMDB_POPULAR:
+            case URL_TYPE_TMDB_TOP_RATED:
                 return parseMoviesFromJson(jsonToParse);
 
-            case TMDB_REVIEWS:
+            case URL_TYPE_TMDB_REVIEWS:
                 return parseReviewsFromJson(jsonToParse);
 
-            case TMDB_VIDEOS:
+            case URL_TYPE_TMDB_VIDEOS:
                 return parseVideoDataFromJson(jsonToParse);
 
                 default:
@@ -295,7 +285,6 @@ public class QueryUtils {
                 String type;
 
                 JSONObject jsonObject = resultsArray.getJSONObject(i);
-
 
                 id = jsonObject.getString(VIDEO_ID);
                 iso6391 = jsonObject.getString(VIDEO_ISO_639_1);

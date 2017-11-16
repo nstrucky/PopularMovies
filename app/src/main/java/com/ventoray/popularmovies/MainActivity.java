@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.ventoray.popularmovies.utils.QueryUtils.URL_TYPE_TMDB_POPULAR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
 import static com.ventoray.popularmovies.data_object.Movie.MOVIE_PARCEL_KEY;
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         URL url = QueryUtils.buildMoviesUrl(baseUrl, type, page);
 
         if (url != null && checkConnectivity(this)) {
-            new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
+            // passing URL_TYPE_TMDB_POPULAR here now as URI type, but really it could be DISCOVER and TOP_RATED too
+            new MovieDataAsyncTask(URL_TYPE_TMDB_POPULAR, new OnMovieDataLoadedListener() {
                 @Override
                 public void onMovieDataLoaded(Object[] movies) {
                     if (movies != null) {

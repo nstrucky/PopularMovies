@@ -13,9 +13,11 @@ import java.net.URL;
 public class MovieDataAsyncTask extends AsyncTask <URL, Void, Object[]> {
 
     private OnMovieDataLoadedListener listener;
+    private int mTmdbUriType;
 
-    public MovieDataAsyncTask(OnMovieDataLoadedListener listener) {
+    public MovieDataAsyncTask(int tmdbUriType, OnMovieDataLoadedListener listener) {
         this.listener = listener;
+        mTmdbUriType = tmdbUriType;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class MovieDataAsyncTask extends AsyncTask <URL, Void, Object[]> {
 
     @Override
     protected Object[] doInBackground(URL... url) {
-        return QueryUtils.makeHttpUrlRequest(url[0]);
+        return QueryUtils.makeHttpUrlRequest(url[0], mTmdbUriType);
     }
 
     @Override
