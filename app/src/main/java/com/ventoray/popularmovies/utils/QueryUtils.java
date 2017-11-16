@@ -108,20 +108,6 @@ public class QueryUtils {
     public static final int URL_TYPE_TMDB_DISCOVER = 1004;
 
 
-    // TODO: 11/15/2017 maybe remove this as it is not really necessary 
-    public static UriMatcher buildUriMatcher() {
-        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_REVIEWS, URL_TYPE_TMDB_REVIEWS);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/#" + PATH_MOVIE_VIDEOS, URL_TYPE_TMDB_VIDEOS);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_POPULAR, URL_TYPE_TMDB_POPULAR);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_3 + "/" + PATH_MOVIES + "/" + PATH_MOVIES_TOP_RATED, URL_TYPE_TMDB_TOP_RATED);
-        uriMatcher.addURI(TMDB_AUTHORITY, PATH_DISCOVER_MOVIES, URL_TYPE_TMDB_DISCOVER);
-
-        return uriMatcher;
-    }
-
-
     /**
      * Method is used to build a URL retrieving either videos or reviews assocated with a movie
      * @param movieId - Tmdb id associated with movie
@@ -410,9 +396,6 @@ public class QueryUtils {
                 movie.setAdult(adult);
                 movie.setVideo(video);
                 movie.setPopularity(popularity);
-
-                Log.d(TAG, "Movie: " + movie.getTitle());
-                Log.d(TAG, "ID: " + movie.getId());
 
                 movies[i] = movie;
             }

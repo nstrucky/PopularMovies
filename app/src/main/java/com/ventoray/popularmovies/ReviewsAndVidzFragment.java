@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ventoray.popularmovies.adapters.ReviewsRecyclerAdapter;
+import com.ventoray.popularmovies.adapters.VideosRecyclerAdapter;
 import com.ventoray.popularmovies.async.MovieDataAsyncTask;
 import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
 import com.ventoray.popularmovies.data_object.Movie;
@@ -44,7 +45,8 @@ public class ReviewsAndVidzFragment extends Fragment {
 
     private List<Review> mReviews;
     private List<VideoData> mVideoDataList;
-    private ReviewsRecyclerAdapter mAdapter;
+    private ReviewsRecyclerAdapter mReviewAdapter;
+    private VideosRecyclerAdapter mVideosAdapter;
     private RecyclerView mRecyclerView;
     private Context mContext;
     private Movie mMovie;
@@ -99,7 +101,7 @@ public class ReviewsAndVidzFragment extends Fragment {
 
         switch (mPageType) {
             case PAGE_TYPE_VIDEOS:
-                getVideoDataList(String.valueOf(mMovie.getId()));
+                setUpVideosView();
                 break;
 
             case PAGE_TYPE_REVIEWS:
@@ -115,12 +117,23 @@ public class ReviewsAndVidzFragment extends Fragment {
 
 
     private void setUpReviewsView() {
-        mAdapter = new ReviewsRecyclerAdapter(mReviews, mContext);
+        mReviewAdapter = new ReviewsRecyclerAdapter(mReviews, mContext);
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mReviewAdapter);
         getReviews(String.valueOf(mMovie.getId()));
+    }
+
+
+    private void setUpVideosView() {
+        mVideosAdapter = new VideosRecyclerAdapter(mContext, mVideoDataList);
+        LinearLayoutManager llm = new LinearLayoutManager(mContext);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.setAdapter(mVideosAdapter);
+        getVideoDataList(String.valueOf(mMovie.getId()));
+
     }
 
     /**
@@ -136,7 +149,7 @@ public class ReviewsAndVidzFragment extends Fragment {
                     if (reviews != null) {
                         if (reviews.length > 0) {
                             mReviews.addAll(Arrays.asList((Review[])reviews));
-                            mAdapter.notifyDataSetChanged();
+                            mReviewAdapter.notifyDataSetChanged();
 
                         }
                     } else {
@@ -164,6 +177,7 @@ public class ReviewsAndVidzFragment extends Fragment {
                     public void onMovieDataLoaded(Object[] videoDataArray) {
                         if (videoDataArray.length > 0) {
                             mVideoDataList.addAll(Arrays.asList((VideoData[]) videoDataArray));
+                            mVideosAdapter.notifyDataSetChanged();
                             for (VideoData videoData : mVideoDataList) {
                                 Log.i("GET VIDEO DATA LIST", "Name: " + videoData.getName());
                             }
