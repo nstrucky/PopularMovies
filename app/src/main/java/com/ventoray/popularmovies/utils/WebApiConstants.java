@@ -53,31 +53,47 @@ public class WebApiConstants {
         public static final String W780 = "w780";
         public static final String ORIGINAL = "original";
 
-        public static final int HTTP_RESPONSE_OK = 200;
+        static final int HTTP_RESPONSE_OK = 200;
 
-        public static final String RESULTS = "results";
-        public static final String VOTE_COUNT = "vote_count";
-        public static final String ID = "id";
-        public static final String VIDEO = "video";
-        public static final String VOTE_AVERAGE = "vote_average";
-        public static final String TITLE = "title";
-        public static final String POPULARITY = "popularity";
-        public static final String POSTER_PATH = "poster_path";
-        public static final String ORIGINAL_LANGUAGE = "original_language";
-        public static final String ORIGINAL_TITLE = "original_title";
-        public static final String GENRE_IDS = "genre_ids";
-        public static final String BACKDROP_PATH = "backdrop_path";
-        public static final String ADULT = "adult";
-        public static final String OVERVIEW = "overview";
-        public static final String RELEASE_DATE = "release_date";
+        static final String RESULTS = "results";
+        static final String VOTE_COUNT = "vote_count";
+        static final String ID = "id";
+        static final String VIDEO = "video";
+        static final String VOTE_AVERAGE = "vote_average";
+        static final String TITLE = "title";
+        static final String POPULARITY = "popularity";
+        static final String POSTER_PATH = "poster_path";
+        static final String ORIGINAL_LANGUAGE = "original_language";
+        static final String ORIGINAL_TITLE = "original_title";
+        static final String GENRE_IDS = "genre_ids";
+        static final String BACKDROP_PATH = "backdrop_path";
+        static final String ADULT = "adult";
+        static final String OVERVIEW = "overview";
+        static final String RELEASE_DATE = "release_date";
 
         /**
          * This are constants representing key names in the movie/#/reviews json response
          */
-        public static final String REVIEW_AUTHOR = "author";
-        public static final String REVIEW_CONTENT = "content";
-        public static final String REVIEW_URL = "url";
-        public static final String REVIEW_ID = "id";
+        static final String REVIEW_RESULTS = "results";
+        static final String REVIEW_AUTHOR = "author";
+        static final String REVIEW_CONTENT = "content";
+        static final String REVIEW_URL = "url";
+        static final String REVIEW_ID = "id";
+
+
+        /**
+         * These are constants representing key names in the movie/#/videos json response
+         */
+        static final String VIDEO_RESULTS = "results";
+        static final String VIDEO_ID = "id";
+        static final String VIDEO_ISO_639_1 = "iso_639_1";
+        static final String VIDEO_ISO_3166_1 = "iso_3166_1";
+        static final String VIDEO_KEY = "key";
+        static final String VIDEO_NAME = "name";
+        static final String VIDEO_SIZE = "size";
+        static final String VIDEO_WEBSITE = "site";
+        static final String VIDEO_TYPE = "type";
+
 
     }
 

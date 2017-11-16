@@ -31,7 +31,7 @@ public class MovieDataAsyncTask extends AsyncTask <URL, Void, Object[]> {
     @Override
     protected void onPostExecute(Object[] movieData) {
 
-        listener.onMoviesLoaded(movieData);
+        listener.onMovieDataLoaded(movieData);
 
     }
 

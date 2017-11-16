@@ -12,6 +12,6 @@ public interface OnMovieDataLoadedListener {
      * the array of movie objects.
      * @param objects
      */
-    void onMoviesLoaded(Object[] objects);
+    void onMovieDataLoaded(Object[] objects);
 
 }

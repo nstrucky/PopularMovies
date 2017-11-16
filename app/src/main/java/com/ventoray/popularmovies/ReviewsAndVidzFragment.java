@@ -18,6 +18,7 @@ import com.ventoray.popularmovies.async.MovieDataAsyncTask;
 import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
 import com.ventoray.popularmovies.data_object.Movie;
 import com.ventoray.popularmovies.data_object.Review;
+import com.ventoray.popularmovies.data_object.VideoData;
 import com.ventoray.popularmovies.utils.QueryUtils;
 
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.util.List;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_TMBD_URI;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_REVIEWS;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_VIDEOS;
 
 
 /**
@@ -40,6 +42,7 @@ public class ReviewsAndVidzFragment extends Fragment {
     private static final String PAGE_TYPE_KEY = "pageTypeKey";
 
     private List<Review> mReviews;
+    private List<VideoData> mVideoDataList;
     private ReviewsRecyclerAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private Context mContext;
@@ -79,6 +82,7 @@ public class ReviewsAndVidzFragment extends Fragment {
         mContext = getContext();
 
         mReviews = new ArrayList<>();
+        mVideoDataList = new ArrayList<>();
     }
 
     @Override
@@ -94,6 +98,7 @@ public class ReviewsAndVidzFragment extends Fragment {
 
         switch (mPageType) {
             case PAGE_TYPE_VIDEOS:
+                getVideoDataList(String.valueOf(mMovie.getId()));
                 break;
 
             case PAGE_TYPE_REVIEWS:
@@ -107,11 +112,6 @@ public class ReviewsAndVidzFragment extends Fragment {
         return view;
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     private void setUpReviewsView() {
         mAdapter = new ReviewsRecyclerAdapter(mReviews, mContext);
@@ -131,15 +131,12 @@ public class ReviewsAndVidzFragment extends Fragment {
         if (url != null && checkConnectivity(mContext)) {
             new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
                 @Override
-                public void onMoviesLoaded(Object[] reviews) {
+                public void onMovieDataLoaded(Object[] reviews) {
                     if (reviews != null) {
                         if (reviews.length > 0) {
                             mReviews.addAll(Arrays.asList((Review[])reviews));
                             mAdapter.notifyDataSetChanged();
 
-                            for (Review review: mReviews) {
-                                Log.i("DETAILS FRAGMENT: ", review.getmContent());
-                            }
                         }
                     } else {
                         Toast.makeText(mContext,
@@ -147,6 +144,30 @@ public class ReviewsAndVidzFragment extends Fragment {
                     }
                 }
             }).execute(url);
+        } else {
+            Toast.makeText(mContext, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void getVideoDataList(String movieId) {
+        URL url = QueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_VIDEOS);
+        if (url != null && checkConnectivity(mContext)) {
+                new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
+                    @Override
+                    public void onMovieDataLoaded(Object[] videoDataArray) {
+                        if (videoDataArray.length > 0) {
+                            mVideoDataList.addAll(Arrays.asList((VideoData[]) videoDataArray));
+                            for (VideoData videoData : mVideoDataList) {
+                                Log.i("GET VIDEO DATA LIST", "Name: " + videoData.getName());
+                            }
+                        } else {
+                            Toast.makeText(mContext,
+                                    R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).execute(url);
+
         } else {
             Toast.makeText(mContext, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
         }

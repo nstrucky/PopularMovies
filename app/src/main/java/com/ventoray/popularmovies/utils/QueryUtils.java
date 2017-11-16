@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.ventoray.popularmovies.data_object.Movie;
 import com.ventoray.popularmovies.data_object.Review;
+import com.ventoray.popularmovies.data_object.VideoData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,10 +58,20 @@ import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.RESULTS;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_AUTHOR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_CONTENT;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_ID;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_RESULTS;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_URL;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.TITLE;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.TMDB_AUTHORITY;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_ID;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_ISO_3166_1;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_ISO_639_1;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_KEY;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_NAME;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_RESULTS;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_SIZE;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_TYPE;
+import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_WEBSITE;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VOTE_AVERAGE;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VOTE_COUNT;
 
@@ -132,7 +143,13 @@ public class QueryUtils {
                 .appendQueryParameter(PARAM_API_KEY, API_KEY_TMDB);
 
         uri = builder.build();
-        sTmdbUriType = TMDB_REVIEWS;
+
+        if (path.equals(PATH_MOVIE_REVIEWS)) {
+            sTmdbUriType = TMDB_REVIEWS;
+        } else if (path.equals(PATH_MOVIE_VIDEOS)) {
+            sTmdbUriType = TMDB_VIDEOS;
+        }
+
 
         Log.d(TAG, uri.toString());
         try {
@@ -183,7 +200,6 @@ public class QueryUtils {
      * This method is called in the AsyncTask in the MainActivity
      * @param url - url built in buildMoviesUrl() to retrieve movies in specified order
      * @return - returns List of Movies to pass to adapter class
-     * @throws IOException
      */
     public static Object[] makeHttpUrlRequest(URL url) {
         InputStream in = null;
@@ -227,6 +243,10 @@ public class QueryUtils {
 
             case TMDB_REVIEWS:
                 return parseReviewsFromJson(jsonToParse);
+
+            case TMDB_VIDEOS:
+                return parseVideoDataFromJson(jsonToParse);
+
                 default:
                     return null;
         }
@@ -255,6 +275,56 @@ public class QueryUtils {
     }
 
 
+    private static VideoData[] parseVideoDataFromJson(String jsonToParse) {
+        VideoData[] videoDataArray = null;
+
+        try {
+            JSONObject jsonResponse = new JSONObject(jsonToParse);
+            JSONArray resultsArray = jsonResponse.getJSONArray(VIDEO_RESULTS);
+            videoDataArray = new VideoData[resultsArray.length()];
+
+            for (int i = 0; i < resultsArray.length(); i++) {
+                VideoData videoData = new VideoData();
+                String id;
+                String iso6391;
+                String iso31661;
+                String key;
+                String name;
+                String webSite;
+                int size;
+                String type;
+
+                JSONObject jsonObject = resultsArray.getJSONObject(i);
+
+
+                id = jsonObject.getString(VIDEO_ID);
+                iso6391 = jsonObject.getString(VIDEO_ISO_639_1);
+                iso31661 = jsonObject.getString(VIDEO_ISO_3166_1);
+                key = jsonObject.getString(VIDEO_KEY);
+                name = jsonObject.getString(VIDEO_NAME);
+                webSite = jsonObject.getString(VIDEO_WEBSITE);
+                size = jsonObject.getInt(VIDEO_SIZE);
+                type = jsonObject.getString(VIDEO_TYPE);
+
+                videoData.setId(id);
+                videoData.setIso6391(iso6391);
+                videoData.setIso31661(iso31661);
+                videoData.setKey(key);
+                videoData.setName(name);
+                videoData.setWebSite(webSite);
+                videoData.setSize(size);
+                videoData.setType(type);
+
+                videoDataArray[i] = videoData;
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "parseVideoDataFromJson --- " + e.getMessage());
+        }
+
+        return videoDataArray;
+    }
+
+
     private static Review[] parseReviewsFromJson(String jsonToParse) {
         JSONObject jsonResponse;
         Review[] reviews = null;
@@ -264,7 +334,7 @@ public class QueryUtils {
 
         try {
             jsonResponse = new JSONObject(jsonToParse);
-            JSONArray resultsArray = jsonResponse.getJSONArray(RESULTS);
+            JSONArray resultsArray = jsonResponse.getJSONArray(REVIEW_RESULTS);
             reviews = new Review[resultsArray.length()];
             String id;
             String author;
@@ -289,7 +359,7 @@ public class QueryUtils {
 
             return reviews;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "parseReviewsFromJson --- " + e.getMessage());
         }
         return reviews;
     }
@@ -361,7 +431,7 @@ public class QueryUtils {
             return movies;
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "parseMoviesFromJson --- " + e.getMessage());
         }
 
         return null;

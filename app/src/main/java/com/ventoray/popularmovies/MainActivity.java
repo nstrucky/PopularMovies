@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         if (url != null && checkConnectivity(this)) {
             new MovieDataAsyncTask(new OnMovieDataLoadedListener() {
                 @Override
-                public void onMoviesLoaded(Object[] movies) {
+                public void onMovieDataLoaded(Object[] movies) {
                     if (movies != null) {
                         if (movies.length > 0) {
                             mMovies.addAll(Arrays.asList((Movie[])movies));

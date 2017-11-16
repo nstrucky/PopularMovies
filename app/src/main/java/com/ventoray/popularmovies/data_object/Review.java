@@ -45,3 +45,4 @@ public class Review {
         this.mUrl = mUrl;
     }
 }
+
