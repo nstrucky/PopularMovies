@@ -1,4 +1,4 @@
-package com.ventoray.popularmovies.data_object;
+package com.ventoray.popularmovies.web_data_object;
 
 import android.os.Parcel;
 import android.os.Parcelable;

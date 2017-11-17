@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.ventoray.popularmovies.adapters.MoviePosterAdapter;
 import com.ventoray.popularmovies.async.MovieDataAsyncTask;
 import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
-import com.ventoray.popularmovies.data_object.Movie;
+import com.ventoray.popularmovies.web_data_object.Movie;
 import com.ventoray.popularmovies.utils.QueryUtils;
 
 import java.net.URL;
@@ -24,7 +24,7 @@ import java.util.List;
 import static com.ventoray.popularmovies.utils.QueryUtils.URL_TYPE_TMDB_POPULAR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
-import static com.ventoray.popularmovies.data_object.Movie.MOVIE_PARCEL_KEY;
+import static com.ventoray.popularmovies.web_data_object.Movie.MOVIE_PARCEL_KEY;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {

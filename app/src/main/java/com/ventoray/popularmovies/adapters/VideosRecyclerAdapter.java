@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ventoray.popularmovies.R;
-import com.ventoray.popularmovies.data_object.VideoData;
+import com.ventoray.popularmovies.web_data_object.VideoData;
 
 import java.util.List;
 

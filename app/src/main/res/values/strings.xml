@@ -10,5 +10,6 @@
     <string name="videos">Videos</string>
     <string name="reviews">Reviews</string>
     <string name="error">Error</string>
+    <string name="favorite">Favorite</string>
 
 </resources>

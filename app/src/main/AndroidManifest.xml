@@ -24,8 +24,14 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                         android:value="com.ventoray.popularmovies.MainActivity"
                 />
-
         </activity>
+
+        <provider
+            android:authorities="com.ventoray.popularmovies"
+            android:name=".data_favorites.FavoritesContentProvider"
+            android:exported="false"
+            />
+
     </application>
 
 </manifest>

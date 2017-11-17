@@ -1,4 +1,4 @@
-package com.ventoray.popularmovies.data_object;
+package com.ventoray.popularmovies.web_data_object;
 
 /**
  * Created by nicks on 11/15/2017.

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ventoray.popularmovies.R;
-import com.ventoray.popularmovies.data_object.Review;
+import com.ventoray.popularmovies.web_data_object.Review;
 
 import java.util.List;
 

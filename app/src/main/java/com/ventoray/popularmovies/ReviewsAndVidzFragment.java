@@ -20,9 +20,9 @@ import com.ventoray.popularmovies.adapters.ReviewsRecyclerAdapter;
 import com.ventoray.popularmovies.adapters.VideosRecyclerAdapter;
 import com.ventoray.popularmovies.async.MovieDataAsyncTask;
 import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
-import com.ventoray.popularmovies.data_object.Movie;
-import com.ventoray.popularmovies.data_object.Review;
-import com.ventoray.popularmovies.data_object.VideoData;
+import com.ventoray.popularmovies.web_data_object.Movie;
+import com.ventoray.popularmovies.web_data_object.Review;
+import com.ventoray.popularmovies.web_data_object.VideoData;
 import com.ventoray.popularmovies.utils.QueryUtils;
 import com.ventoray.popularmovies.utils.WebApiConstants;
 

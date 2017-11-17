@@ -1,13 +1,12 @@
 package com.ventoray.popularmovies.utils;
 
-import android.content.UriMatcher;
 import android.net.Uri;
 import android.support.annotation.StringDef;
 import android.util.Log;
 
-import com.ventoray.popularmovies.data_object.Movie;
-import com.ventoray.popularmovies.data_object.Review;
-import com.ventoray.popularmovies.data_object.VideoData;
+import com.ventoray.popularmovies.web_data_object.Movie;
+import com.ventoray.popularmovies.web_data_object.Review;
+import com.ventoray.popularmovies.web_data_object.VideoData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,12 +40,7 @@ import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PARAM_LANGUA
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PARAM_PAGE;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PARAM_SORT_BY;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_3;
-import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_DISCOVER_MOVIES;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIES;
-import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIES_POPULAR;
-import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIES_TOP_RATED;
-import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_REVIEWS;
-import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_VIDEOS;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.POPULARITY;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.POPULAR_ASC;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.POPULAR_DESC;
@@ -61,7 +55,6 @@ import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_ID;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_RESULTS;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.REVIEW_URL;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.TITLE;
-import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.TMDB_AUTHORITY;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_ID;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VIDEO_ISO_3166_1;

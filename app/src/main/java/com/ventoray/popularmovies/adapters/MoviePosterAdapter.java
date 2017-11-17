@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.ventoray.popularmovies.data_object.Movie;
+import com.ventoray.popularmovies.web_data_object.Movie;
 import com.ventoray.popularmovies.R;
 
 import java.util.List;
