@@ -22,11 +22,13 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
 
     private Context mContext;
     private List<VideoData> mVideoDataList;
+    private OnVideoItemClickedListener mListener;
 
-    public VideosRecyclerAdapter(Context context, List<VideoData> videoDataList) {
+    public VideosRecyclerAdapter(Context context, List<VideoData> videoDataList, OnVideoItemClickedListener listener) {
         super();
         mContext = context;
         mVideoDataList = videoDataList;
+        mListener = listener;
 
     }
 
@@ -53,7 +55,7 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
         return mVideoDataList.size();
     }
 
-    class VideoViewHolder extends RecyclerView.ViewHolder{
+    class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView thumbnailImageView;
         TextView videoTitleTextView;
@@ -63,8 +65,18 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideosRecyclerAd
 
             thumbnailImageView = (ImageView) itemView.findViewById(R.id.iv_thumbnail);
             videoTitleTextView = (TextView) itemView.findViewById(R.id.tv_video_title);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            VideoData data = mVideoDataList.get(getAdapterPosition());
+            String videoKey = data.getKey();
+            mListener.onVideoItemClicked(videoKey);
         }
     }
 }
+
+
 
 //https://img.youtube.com/vi/<insert-youtube-video-id-here>/0.jpg

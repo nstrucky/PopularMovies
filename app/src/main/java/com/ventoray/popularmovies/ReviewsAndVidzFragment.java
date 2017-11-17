@@ -2,6 +2,8 @@ package com.ventoray.popularmovies;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.ventoray.popularmovies.adapters.OnVideoItemClickedListener;
 import com.ventoray.popularmovies.adapters.ReviewsRecyclerAdapter;
 import com.ventoray.popularmovies.adapters.VideosRecyclerAdapter;
 import com.ventoray.popularmovies.async.MovieDataAsyncTask;
@@ -21,6 +24,7 @@ import com.ventoray.popularmovies.data_object.Movie;
 import com.ventoray.popularmovies.data_object.Review;
 import com.ventoray.popularmovies.data_object.VideoData;
 import com.ventoray.popularmovies.utils.QueryUtils;
+import com.ventoray.popularmovies.utils.WebApiConstants;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -125,9 +129,22 @@ public class ReviewsAndVidzFragment extends Fragment {
         getReviews(String.valueOf(mMovie.getId()));
     }
 
+//https://www.youtube.com/watch?v=Zgu-LUHQydk
 
     private void setUpVideosView() {
-        mVideosAdapter = new VideosRecyclerAdapter(mContext, mVideoDataList);
+        mVideosAdapter = new VideosRecyclerAdapter(mContext, mVideoDataList,
+                new OnVideoItemClickedListener() {
+                    @Override
+                    public void onVideoItemClicked(String videoId) {
+                        Uri uri = Uri.parse(WebApiConstants.YouTube.BASE_WATCH_URL)
+                                .buildUpon()
+                                .appendQueryParameter(WebApiConstants.YouTube.PARAM_V, videoId)
+                                .build();
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                });
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);

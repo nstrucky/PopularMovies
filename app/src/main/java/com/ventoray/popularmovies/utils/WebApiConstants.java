@@ -100,7 +100,9 @@ public class WebApiConstants {
 
     public static class YouTube {
 
+        public static final String BASE_WATCH_URL = "https://www.youtube.com/watch";
 
+        public static final String PARAM_V = "v";
 
 
     }
