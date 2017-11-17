@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +51,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private TextView mSynopsisTextView;
     private TextView mReleaseTextView;
     private ImageView mPosterImageView;
+    private Menu mMenu;
+    private boolean mIsFavorite;
 
     private RatingBar mRatingBar;
     private Movie mMovie;
@@ -61,10 +65,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
         bindViews();
         Intent passedIntent = getIntent();
 
+
+
+
         if (passedIntent.hasExtra(MOVIE_PARCEL_KEY)) {
             mMovie = (Movie) passedIntent.getParcelableExtra(MOVIE_PARCEL_KEY);
 
         }
+
 
         setUpViewPager();
         updateUI();
@@ -113,6 +121,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_details, menu);
+        mMenu = menu;
+
+        if (mIsFavorite = checkFavorite()) {
+            DrawableCompat.setTint(menu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.yellow));
+
+        }
 
         return true;
     }
@@ -125,7 +139,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_favorite:
                 // TODO: 11/16/2017 save movie to favorites tab
-                saveFavorite();
+                if (!mIsFavorite) {
+                    saveFavorite();
+                } else {
+                    Toast.makeText(this, "Already favorite", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
 
@@ -137,6 +156,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         ContentValues values = new ContentValues();
 
+        values.put(COLUMN_MOVIE_ID, mMovie.getId());
         values.put(COLUMN_VOTE_COUNT, mMovie.getVoteCount());
         values.put(COLUMN_VOTE_AVERAGE, mMovie.getVoteAverage());
         values.put(COLUMN_TITLE, mMovie.getTitle());
@@ -153,24 +173,33 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Uri returnedUri = getContentResolver().insert(FavoritesContract.FavoritesEntry.CONTENT_URI, values);
 
         Toast.makeText(this, returnedUri.toString(), Toast.LENGTH_SHORT).show();
+        DrawableCompat.setTint(mMenu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.yellow));
+        mIsFavorite = true;
+    }
 
 
-        Cursor cursor = getContentResolver().query(CONTENT_URI,
+    private boolean checkFavorite() {
+
+        Cursor cursor = getContentResolver().query(
+                CONTENT_URI,
+                new String[]{COLUMN_MOVIE_ID, COLUMN_TITLE},
                 null,
                 null,
-                null,
-                null);
+                null
+        );
+
+        if (cursor == null) return false;
 
         for (int i = 0; i < cursor.getCount(); i++) {
+            if (!cursor.moveToPosition(i)) return false;
 
-            cursor.moveToPosition(i);
-
-            int movieID = cursor.getInt(cursor.getColumnIndex(COLUMN_MOVIE_ID));
-            String movieTitle = cursor.getString(cursor.getColumnIndex(COLUMN_TITLE));
-
-            Log.i("DETAILS ACT", "ID: " + movieID);
-            Log.i("DETAILS ACT", "Title: " + movieTitle);
+            int movieId = cursor.getInt(cursor.getColumnIndex(COLUMN_MOVIE_ID));
+            if (movieId == mMovie.getId()) {
+                cursor.close();
+                return true;
+            }
         }
+        return false;
     }
 
 
