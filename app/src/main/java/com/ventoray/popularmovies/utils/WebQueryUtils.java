@@ -72,7 +72,7 @@ import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.VOTE_COUNT;
  * Created by Nick on 10/15/2017.
  */
 
-public class QueryUtils {
+public class WebQueryUtils {
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef ({
@@ -92,7 +92,7 @@ public class QueryUtils {
     public @interface BaseUrl {}
 
 
-    private static final String TAG = "QueryUtils";
+    private static final String TAG = "WebQueryUtils";
 
     public static final int URL_TYPE_TMDB_REVIEWS = 1000;
     public static final int URL_TYPE_TMDB_VIDEOS = 1001;

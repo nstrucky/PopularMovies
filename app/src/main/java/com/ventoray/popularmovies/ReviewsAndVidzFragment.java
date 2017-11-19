@@ -20,10 +20,10 @@ import com.ventoray.popularmovies.adapters.ReviewsRecyclerAdapter;
 import com.ventoray.popularmovies.adapters.VideosRecyclerAdapter;
 import com.ventoray.popularmovies.async.MovieDataAsyncTask;
 import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
+import com.ventoray.popularmovies.utils.WebQueryUtils;
 import com.ventoray.popularmovies.web_data_object.Movie;
 import com.ventoray.popularmovies.web_data_object.Review;
 import com.ventoray.popularmovies.web_data_object.VideoData;
-import com.ventoray.popularmovies.utils.QueryUtils;
 import com.ventoray.popularmovies.utils.WebApiConstants;
 
 import java.net.URL;
@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.utils.QueryUtils.URL_TYPE_TMDB_REVIEWS;
-import static com.ventoray.popularmovies.utils.QueryUtils.URL_TYPE_TMDB_VIDEOS;
+import static com.ventoray.popularmovies.utils.WebQueryUtils.URL_TYPE_TMDB_REVIEWS;
+import static com.ventoray.popularmovies.utils.WebQueryUtils.URL_TYPE_TMDB_VIDEOS;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_REVIEWS;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.PATH_MOVIE_VIDEOS;
@@ -158,7 +158,7 @@ public class ReviewsAndVidzFragment extends Fragment {
      * @param movieId ID of Object passed to MoviesDetailsActivity
      */
     private void getReviews(String movieId) {
-        URL url = QueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_REVIEWS);
+        URL url = WebQueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_REVIEWS);
         if (url != null && checkConnectivity(mContext)) {
             new MovieDataAsyncTask(URL_TYPE_TMDB_REVIEWS, new OnMovieDataLoadedListener() {
                 @Override
@@ -187,7 +187,7 @@ public class ReviewsAndVidzFragment extends Fragment {
      * @param movieId ID of Object passed to MoviesDetailsActivity
      */
     private void getVideoDataList(String movieId) {
-        URL url = QueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_VIDEOS);
+        URL url = WebQueryUtils.buildMovieDataUrl(movieId, PATH_MOVIE_VIDEOS);
         if (url != null && checkConnectivity(mContext)) {
                 new MovieDataAsyncTask(URL_TYPE_TMDB_VIDEOS, new OnMovieDataLoadedListener() {
                     @Override

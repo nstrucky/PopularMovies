@@ -2,7 +2,7 @@ package com.ventoray.popularmovies.async;
 
 import android.os.AsyncTask;
 
-import com.ventoray.popularmovies.utils.QueryUtils;
+import com.ventoray.popularmovies.utils.WebQueryUtils;
 
 import java.net.URL;
 
@@ -27,7 +27,7 @@ public class MovieDataAsyncTask extends AsyncTask <URL, Void, Object[]> {
 
     @Override
     protected Object[] doInBackground(URL... url) {
-        return QueryUtils.makeHttpUrlRequest(url[0], mTmdbUrlType);
+        return WebQueryUtils.makeHttpUrlRequest(url[0], mTmdbUrlType);
     }
 
     @Override

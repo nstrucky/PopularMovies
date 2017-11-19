@@ -95,9 +95,39 @@ public class FavoritesContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase database = mFavoritesDbHelper.getWritableDatabase();
+        int match = buildUriMatcher().match(uri);
+        int numRows = 0;
+
+        switch (match) {
+            case URI_FAVORITES:
+                numRows = database.delete(
+                        TABLE_NAME,
+                        selection+"=?",
+                        selectionArgs
+                );
+
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Could not match Uri: " + uri);
+        }
+
+        if (numRows > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return numRows;
     }
 
+    /**
+     * no functionality defined yet, as user only needs to insert/delete favorites
+     * @param uri
+     * @param values
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         return 0;

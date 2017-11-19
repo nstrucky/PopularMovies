@@ -12,4 +12,9 @@
     <string name="error">Error</string>
     <string name="favorite">Favorite</string>
 
+
+    <string name="added_to_favs">Added to favorites!</string>
+    <string name="removed_from_favs">Removed from favorites.</string>
+    <string name="error_remove_favs">There was an error removing this item from favorites.</string>
+    <string name="error_save_favs">There was an error saving to favorites.</string>
 </resources>

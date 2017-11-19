@@ -57,23 +57,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private RatingBar mRatingBar;
     private Movie mMovie;
 
+    Toast mToast;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+        mToast = Toast.makeText(this, "placeholder", Toast.LENGTH_SHORT);
         setUpActionBar();
         bindViews();
         Intent passedIntent = getIntent();
-
-
-
 
         if (passedIntent.hasExtra(MOVIE_PARCEL_KEY)) {
             mMovie = (Movie) passedIntent.getParcelableExtra(MOVIE_PARCEL_KEY);
 
         }
-
-
         setUpViewPager();
         updateUI();
     }
@@ -124,10 +123,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mMenu = menu;
 
         if (mIsFavorite = checkFavorite()) {
-            DrawableCompat.setTint(menu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.yellow));
-
+            DrawableCompat.setTint(menu.findItem(R.id.action_favorite).getIcon(),
+                    ContextCompat.getColor(this, R.color.colorAccent));
         }
-
         return true;
     }
 
@@ -138,16 +136,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_favorite:
-                // TODO: 11/16/2017 save movie to favorites tab
                 if (!mIsFavorite) {
                     saveFavorite();
                 } else {
-                    Toast.makeText(this, "Already favorite", Toast.LENGTH_SHORT).show();
+                    removeFromFavorites();
                 }
 
                 break;
         }
 
+        logItems();
         return false;
     }
 
@@ -172,14 +170,37 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         Uri returnedUri = getContentResolver().insert(FavoritesContract.FavoritesEntry.CONTENT_URI, values);
 
-        Toast.makeText(this, returnedUri.toString(), Toast.LENGTH_SHORT).show();
-        DrawableCompat.setTint(mMenu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.yellow));
+        if (returnedUri == null) {
+            mToast.setText(R.string.error_save_favs);
+            mToast.show();
+        }
+
+        mToast.setText(R.string.added_to_favs);
+        mToast.show();
+        DrawableCompat.setTint(mMenu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.colorAccent));
         mIsFavorite = true;
+    }
+
+    private void removeFromFavorites() {
+        String movieId = String.valueOf(mMovie.getId());
+
+        int rowsRmoved =
+                getContentResolver().delete(CONTENT_URI, COLUMN_MOVIE_ID, new String[] {movieId});
+
+        if (rowsRmoved < 1) {
+            mToast.setText(R.string.error_remove_favs);
+            mToast.show();
+            return;
+        }
+
+        mToast.setText(R.string.removed_from_favs);
+        mToast.show();
+        DrawableCompat.setTint(mMenu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.colorPrimaryDark));
+
     }
 
 
     private boolean checkFavorite() {
-
         Cursor cursor = getContentResolver().query(
                 CONTENT_URI,
                 new String[]{COLUMN_MOVIE_ID, COLUMN_TITLE},
@@ -202,6 +223,32 @@ public class MovieDetailsActivity extends AppCompatActivity {
         return false;
     }
 
+
+    /**
+     * used only for debugging purposes
+     */
+    private void logItems() {
+        Cursor cursor = getContentResolver().query(
+                CONTENT_URI,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            if (!cursor.moveToPosition(i)) return;
+            int movieID = cursor.getInt(cursor.getColumnIndex(COLUMN_MOVIE_ID));
+            String title = cursor.getString(cursor.getColumnIndex(COLUMN_TITLE));
+
+            Log.i("DETAILS Acitivty",
+                    String.format("Movie ID: %d%nMovie Title: %s%n",
+                            movieID, title));
+        }
+
+            cursor.close();
+    }
 
 
     private void setUpActionBar() {

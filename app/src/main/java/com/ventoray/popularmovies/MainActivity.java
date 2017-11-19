@@ -13,15 +13,15 @@ import android.widget.Toast;
 import com.ventoray.popularmovies.adapters.MoviePosterAdapter;
 import com.ventoray.popularmovies.async.MovieDataAsyncTask;
 import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
+import com.ventoray.popularmovies.utils.WebQueryUtils;
 import com.ventoray.popularmovies.web_data_object.Movie;
-import com.ventoray.popularmovies.utils.QueryUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ventoray.popularmovies.utils.QueryUtils.URL_TYPE_TMDB_POPULAR;
+import static com.ventoray.popularmovies.utils.WebQueryUtils.URL_TYPE_TMDB_POPULAR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_POPULAR;
 import static com.ventoray.popularmovies.utils.WebApiConstants.TMDB.BASE_URL_MOVIE_TOP_RATED;
 import static com.ventoray.popularmovies.web_data_object.Movie.MOVIE_PARCEL_KEY;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getMovieData(String baseUrl, String type, int page) {
-        URL url = QueryUtils.buildMoviesUrl(baseUrl, type, page);
+        URL url = WebQueryUtils.buildMoviesUrl(baseUrl, type, page);
 
         if (url != null && checkConnectivity(this)) {
             // passing URL_TYPE_TMDB_POPULAR here now as URI type, but really it could be DISCOVER and TOP_RATED too
