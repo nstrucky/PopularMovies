@@ -57,7 +57,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private RatingBar mRatingBar;
     private Movie mMovie;
 
-    Toast mToast;
+    private Toast mToast;
 
 
     @Override
@@ -76,7 +76,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setUpViewPager();
         updateUI();
     }
-
 
     private void setUpViewPager() {
         ViewPager mPager = findViewById(R.id.pager_details);
@@ -98,7 +97,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void updateUI() {
         if (mMovie != null) {
             String posterPath = mMovie.getPosterPath();
-            String releaseDate = DateUtil.formatDate(mMovie.getReleaseDate());
+            String releaseDate = DateUtil.formatTmdbDate(mMovie.getReleaseDate());
 
             Log.d("DETAILS", "Date: " + mMovie.getReleaseDate());
 
@@ -150,8 +149,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Saves the Movie object associated with this activity in favorites table in favorites.db
+     */
     private void saveFavorite() {
-
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_MOVIE_ID, mMovie.getId());
@@ -181,6 +182,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mIsFavorite = true;
     }
 
+    /**
+     * Removes the Movie object associated with this activity from the favorites table in
+     * the favorites.db
+     */
     private void removeFromFavorites() {
         String movieId = String.valueOf(mMovie.getId());
 
@@ -200,6 +205,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Determines whether the movie object associated with this Activity is a favorite
+     * @return - boolean is a favorite or not
+     */
     private boolean checkFavorite() {
         Cursor cursor = getContentResolver().query(
                 CONTENT_URI,
@@ -224,6 +233,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
 
+    private void setUpActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    public Movie getMovie() {
+        return mMovie;
+    }
+
+
+
     /**
      * used only for debugging purposes
      */
@@ -246,23 +268,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     String.format("Movie ID: %d%nMovie Title: %s%n",
                             movieID, title));
         }
-
-            cursor.close();
+        cursor.close();
     }
-
-
-    private void setUpActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    public Movie getMovie() {
-        return mMovie;
-    }
-
-
-
-
 }

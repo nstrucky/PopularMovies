@@ -6,7 +6,7 @@ package com.ventoray.popularmovies.utils;
 
 public class DateUtil {
 
-    public static String formatDate(String dateString) {
+    public static String formatTmdbDate(String dateString) {
         String date;
 
         if (dateString == null) {

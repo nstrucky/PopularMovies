@@ -4,8 +4,20 @@
 
     <item
         android:title="@string/rating"
-        android:id="@+id/action_switch"
-        app:showAsAction="always"
+        android:id="@+id/action_rating"
+        app:showAsAction="never"
         />
 
+    <item
+        android:title="@string/popular"
+        android:id="@+id/action_popular"
+        app:showAsAction="never"
+        />
+
+
+    <item
+        android:title="@string/favorites"
+        android:id="@+id/action_favorites"
+        app:showAsAction="never"
+        />
 </menu>

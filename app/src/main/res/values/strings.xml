@@ -5,6 +5,7 @@
 
     <string name="popular">By Popularity</string>
     <string name="rating">By Rating</string>
+    <string name="favorites">Favorites</string>
 
     <!--Labels-->
     <string name="videos">Videos</string>
