@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,20 +50,45 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private MoviePosterAdapter mPosterAdapter;
 
+
+    private final String KEY_INSTANCE_STATE_MOVIES = "moviesInstanceStateKey";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpRecyclerView();
-        getMoviesFromWeb(BASE_URL_MOVIE_POPULAR, null, 1);
 
+        if (savedInstanceState == null) {
+            getMoviesFromWeb(BASE_URL_MOVIE_POPULAR, null, 1);
+
+        }
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(KEY_INSTANCE_STATE_MOVIES)) {
+            List<Movie> movies =
+                    savedInstanceState.getParcelableArrayList(KEY_INSTANCE_STATE_MOVIES);
+            if (movies != null) {
+                mMovies.addAll(movies);
+                mPosterAdapter.notifyDataSetChanged();
+            }
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        ArrayList<Movie> movies = new ArrayList<>(mMovies);
+        outState.putParcelableArrayList(KEY_INSTANCE_STATE_MOVIES, movies);
+        super.onSaveInstanceState(outState);
+    }
 
     private void setUpRecyclerView() {
-        GridLayoutManager glm = new GridLayoutManager(this, 3);
         mMovies = new ArrayList<>();
+        GridLayoutManager glm = new GridLayoutManager(this, 3);
+
         mPosterAdapter = new MoviePosterAdapter(mMovies,
                 getApplicationContext(), new MoviePosterAdapter.PosterOnClickListener() {
             @Override
@@ -79,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(glm);
         mRecyclerView.setAdapter(mPosterAdapter);
     }
-
 
 
     @Override
@@ -116,9 +141,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param baseUrl -
-     * @param type - will be updated for future functionality
+     * @param type    - will be updated for future functionality
      * @param page
      */
     private void getMoviesFromWeb(String baseUrl, String type, int page) {
@@ -132,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     if (movies != null) {
                         if (movies.length > 0) {
                             mMovies.clear();
-                            mMovies.addAll(Arrays.asList((Movie[])movies));
+                            mMovies.addAll(Arrays.asList((Movie[]) movies));
                             mPosterAdapter.notifyDataSetChanged();
                         }
                     } else {
@@ -145,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     private void getFavorites() {
