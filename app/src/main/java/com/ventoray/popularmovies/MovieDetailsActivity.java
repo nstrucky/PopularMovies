@@ -59,12 +59,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private Toast mToast;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         mToast = Toast.makeText(this, "placeholder", Toast.LENGTH_SHORT);
+
         setUpActionBar();
         bindViews();
         Intent passedIntent = getIntent();
@@ -95,6 +95,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
+
+
         if (mMovie != null) {
             String posterPath = mMovie.getPosterPath();
             String releaseDate = DateUtil.formatTmdbDate(mMovie.getReleaseDate());
@@ -124,6 +126,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         if (mIsFavorite = checkFavorite()) {
             DrawableCompat.setTint(menu.findItem(R.id.action_favorite).getIcon(),
                     ContextCompat.getColor(this, R.color.colorAccent));
+        } else {
+            DrawableCompat.setTint(mMenu.findItem(R.id.action_favorite).getIcon(),
+                    ContextCompat.getColor(this, R.color.white));
         }
         return true;
     }
@@ -200,7 +205,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         mToast.setText(R.string.removed_from_favs);
         mToast.show();
-        DrawableCompat.setTint(mMenu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        DrawableCompat.setTint(mMenu.findItem(R.id.action_favorite).getIcon(), ContextCompat.getColor(this, R.color.white));
 
     }
 

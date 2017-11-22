@@ -1,7 +1,9 @@
 package com.ventoray.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +20,8 @@ import com.ventoray.popularmovies.async.OnMovieDataLoadedListener;
 import com.ventoray.popularmovies.utils.WebQueryUtils;
 import com.ventoray.popularmovies.web_data_object.Movie;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,14 +48,29 @@ import static com.ventoray.popularmovies.web_data_object.Movie.MOVIE_PARCEL_KEY;
 import static com.ventoray.popularmovies.utils.NetworkUtils.checkConnectivity;
 
 public class MainActivity extends AppCompatActivity {
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef ({
+            POSTER_TYPE_POPULAR,
+            POSTER_TYPE_RATING,
+            POSTER_TYPE_FAVORITES
+    })
+    @interface PosterType {}
+
 
     private final String TAG = getClass().getSimpleName();
     private List<Movie> mMovies;
     private RecyclerView mRecyclerView;
     private MoviePosterAdapter mPosterAdapter;
 
+    private static final String PREF_FILE = "PreferenceFile";
+    private static final String POSTER_TYPE_PREF = "posterTypePref";
 
     private final String KEY_INSTANCE_STATE_MOVIES = "moviesInstanceStateKey";
+    private final String KEY_INSTANCE_STATE_TITLE = "activityTitleKey";
+
+    private static final int POSTER_TYPE_POPULAR = 1000;
+    private static final int POSTER_TYPE_RATING = 1001;
+    private static final int POSTER_TYPE_FAVORITES = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +79,37 @@ public class MainActivity extends AppCompatActivity {
         setUpRecyclerView();
 
         if (savedInstanceState == null) {
-            getMoviesFromWeb(BASE_URL_MOVIE_POPULAR, null, 1);
+            initializePosters();
+        }
+    }
 
+    private int getTypePreference() {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREF_FILE, MODE_PRIVATE);
+        return sharedPreferences.getInt(POSTER_TYPE_PREF, POSTER_TYPE_POPULAR);
+    }
+
+    private void setPosterTypePref(@PosterType int posterType) {
+        SharedPreferences.Editor editor = getSharedPreferences(PREF_FILE, MODE_PRIVATE).edit();
+        editor.putInt(POSTER_TYPE_PREF, posterType);
+        editor.apply();
+    }
+
+    private void initializePosters() {
+        switch (getTypePreference()) {
+            case POSTER_TYPE_POPULAR:
+                getMoviesFromWeb(BASE_URL_MOVIE_POPULAR, null, 1);
+                setTitle(R.string.popular);
+                break;
+
+            case POSTER_TYPE_RATING:
+                getMoviesFromWeb(BASE_URL_MOVIE_TOP_RATED, null, 1);
+                setTitle(R.string.rating);
+                break;
+
+            case POSTER_TYPE_FAVORITES:
+                getFavorites();
+                setTitle(R.string.favorites);
+                break;
         }
     }
 
@@ -75,6 +123,11 @@ public class MainActivity extends AppCompatActivity {
                 mPosterAdapter.notifyDataSetChanged();
             }
         }
+
+        if (savedInstanceState.containsKey(KEY_INSTANCE_STATE_TITLE)) {
+            String title = savedInstanceState.getString(KEY_INSTANCE_STATE_TITLE);
+            setTitle(title);
+        }
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -82,6 +135,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         ArrayList<Movie> movies = new ArrayList<>(mMovies);
         outState.putParcelableArrayList(KEY_INSTANCE_STATE_MOVIES, movies);
+        String title = getTitle().toString();
+        if (!title.isEmpty()) {
+            outState.putString(KEY_INSTANCE_STATE_TITLE, title);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -122,18 +179,21 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_popular:
                 getMoviesFromWeb(BASE_URL_MOVIE_POPULAR, null, 1);
                 setTitle(R.string.popular);
+                setPosterTypePref(POSTER_TYPE_POPULAR);
                 break;
 
 
             case R.id.action_rating:
                 getMoviesFromWeb(BASE_URL_MOVIE_TOP_RATED, null, 1);
                 setTitle(R.string.rating);
+                setPosterTypePref(POSTER_TYPE_RATING);
                 break;
 
 
             case R.id.action_favorites:
                 getFavorites();
                 setTitle(R.string.favorites);
+                setPosterTypePref(POSTER_TYPE_FAVORITES);
                 break;
         }
 
@@ -169,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void getFavorites() {
         Cursor cursor = getContentResolver().query(

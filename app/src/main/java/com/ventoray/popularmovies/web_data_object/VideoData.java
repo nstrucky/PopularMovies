@@ -1,10 +1,13 @@
 package com.ventoray.popularmovies.web_data_object;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by nicks on 11/15/2017.
  */
 
-public class VideoData {
+public class VideoData implements Parcelable {
 
     private String mId;
     private String mIso6391;
@@ -15,6 +18,48 @@ public class VideoData {
     private int mSize;
     private String mType;
 
+
+    public VideoData() {}
+
+    public VideoData(Parcel in) {
+        mId = in.readString();
+        mIso6391 = in.readString();
+        mIso31661 = in.readString();
+        mKey = in.readString();
+        mName = in.readString();
+        mWebSite = in.readString();
+        mSize = in.readInt();
+        mType = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int i) {
+        out.writeString(mId);
+        out.writeString(mIso6391);
+        out.writeString(mIso31661);
+        out.writeString(mKey);
+        out.writeString(mName);
+        out.writeString(mWebSite);
+        out.writeInt(mSize);
+        out.writeString(mType);
+    }
+
+    public final static Parcelable.Creator<VideoData> CREATOR = new Parcelable.Creator<VideoData>() {
+        @Override
+        public VideoData createFromParcel(Parcel in) {
+            return new VideoData(in);
+        }
+
+        @Override
+        public VideoData[] newArray(int size) {
+            return new VideoData[size];
+        }
+    };
 
     public String getId() {
         return mId;

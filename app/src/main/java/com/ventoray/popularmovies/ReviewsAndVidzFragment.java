@@ -26,6 +26,7 @@ import com.ventoray.popularmovies.web_data_object.Review;
 import com.ventoray.popularmovies.web_data_object.VideoData;
 import com.ventoray.popularmovies.utils.WebApiConstants;
 
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +58,8 @@ public class ReviewsAndVidzFragment extends Fragment {
     private int mPageType = PAGE_TYPE_REVIEWS;
 
 
+    private final String KEY_VIDEOS_LIST = "videoListKey";
+    private final String KEY_REVIEWS_LIST = "reviewListKey";
 
     public ReviewsAndVidzFragment() {
         // Required empty public constructor
@@ -96,42 +99,58 @@ public class ReviewsAndVidzFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_reviews_and_vidz, container, false);
+        View view = inflater.inflate(R.layout.fragment_reviews_and_vidz,
+                container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mMovie = ((MovieDetailsActivity) getActivity()).getMovie();
         mPageType =
                 getArguments() != null ? getArguments().getInt(PAGE_TYPE_KEY) : PAGE_TYPE_REVIEWS;
 
-
         switch (mPageType) {
             case PAGE_TYPE_VIDEOS:
-                setUpVideosView();
+                setUpVideosView(savedInstanceState);
                 break;
 
             case PAGE_TYPE_REVIEWS:
-                setUpReviewsView();
+                setUpReviewsView(savedInstanceState);
 
                 break;
             default:
                     Toast.makeText(mContext, mContext.getString(R.string.error), Toast.LENGTH_SHORT).show();
         }
-
         return view;
     }
 
 
-    private void setUpReviewsView() {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        ArrayList<VideoData> videoData = new ArrayList<>(mVideoDataList);
+        ArrayList<Review> reviews = new ArrayList<>(mReviews);
+        outState.putParcelableArrayList(KEY_VIDEOS_LIST, videoData);
+        outState.putParcelableArrayList(KEY_REVIEWS_LIST, reviews);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    private void setUpReviewsView(Bundle savedInstanceState) {
         mReviewAdapter = new ReviewsRecyclerAdapter(mReviews, mContext);
         LinearLayoutManager llm = new LinearLayoutManager(mContext);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(mReviewAdapter);
-        getReviews(String.valueOf(mMovie.getId()));
+
+        if (savedInstanceState == null) {
+            getReviews(String.valueOf(mMovie.getId()));
+        } else if (savedInstanceState.containsKey(KEY_REVIEWS_LIST)) {
+            ArrayList<Review> reviews = savedInstanceState.getParcelableArrayList(KEY_REVIEWS_LIST);
+            if (reviews != null) {
+                mReviews.addAll(reviews);
+                mReviewAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
-//https://www.youtube.com/watch?v=Zgu-LUHQydk
-
-    private void setUpVideosView() {
+    private void setUpVideosView(Bundle savedInstanceState) {
         mVideosAdapter = new VideosRecyclerAdapter(mContext, mVideoDataList,
                 new OnVideoItemClickedListener() {
                     @Override
@@ -149,7 +168,15 @@ public class ReviewsAndVidzFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
         mRecyclerView.setAdapter(mVideosAdapter);
-        getVideoDataList(String.valueOf(mMovie.getId()));
+        if (savedInstanceState == null) {
+            getVideoDataList(String.valueOf(mMovie.getId()));
+        } else if (savedInstanceState.containsKey(KEY_VIDEOS_LIST)) {
+            List<VideoData> videoData = savedInstanceState.getParcelableArrayList(KEY_VIDEOS_LIST);
+            if (videoData != null) {
+                mVideoDataList.addAll(videoData);
+                mVideosAdapter.notifyDataSetChanged();
+            }
+        }
 
     }
 
@@ -171,12 +198,15 @@ public class ReviewsAndVidzFragment extends Fragment {
                         }
                     } else {
                         Toast.makeText(mContext,
-                                R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
+                                R.string.error_retrieve_data,
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }).execute(url);
         } else {
-            Toast.makeText(mContext, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext,
+                    R.string.error_retrieve_data,
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -200,13 +230,16 @@ public class ReviewsAndVidzFragment extends Fragment {
                             }
                         } else {
                             Toast.makeText(mContext,
-                                    R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
+                                    R.string.error_retrieve_data,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).execute(url);
 
         } else {
-            Toast.makeText(mContext, R.string.error_retrieve_data, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext,
+                    R.string.error_retrieve_data,
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
